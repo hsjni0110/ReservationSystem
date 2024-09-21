@@ -1,6 +1,7 @@
 package com.example.reservationsystem.user.signup.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(name = "USERS")
@@ -10,6 +11,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long userId;
 
     private String email;

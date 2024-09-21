@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/sign-up")
@@ -20,8 +22,8 @@ public class SignUpController {
     public ResponseEntity<Void> signUp(
             @RequestBody SignUpRequest signUpRequest
     ) {
-        signUpService.signUp(signUpRequest.email(), signUpRequest.password(), signUpRequest.name(), signUpRequest.phoneNumber());
-        return ResponseEntity.ok().build();
+        Long id = signUpService.signUp(signUpRequest.email(), signUpRequest.password(), signUpRequest.name(), signUpRequest.phoneNumber());
+        return ResponseEntity.created(URI.create("/sign-up/" + id)).build();
     }
 
 }
