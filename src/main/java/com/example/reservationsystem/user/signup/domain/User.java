@@ -1,8 +1,11 @@
 package com.example.reservationsystem.user.signup.domain;
 
+import com.example.reservationsystem.user.signin.exception.UserAuthException;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.example.reservationsystem.user.signin.exception.UserAuthExceptionType.INVALID_PASSWORD;
 
 @Table(name = "USERS")
 @Entity
@@ -28,6 +31,13 @@ public class User {
 
     public static User create(String email, String password, String name, String phoneNumber) {
         return new User(email, password, name, phoneNumber);
+    }
+
+
+    public void validatePassword(String givenPassword) {
+        if (!password.equals(givenPassword)) {
+            throw new UserAuthException(INVALID_PASSWORD);
+        }
     }
 
 }

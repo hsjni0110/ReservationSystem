@@ -1,20 +1,23 @@
 package com.example.reservationsystem.user;
 
 import com.example.reservationsystem.common.DomainTest;
+import com.example.reservationsystem.user.signin.domain.JwtProvider;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@DisplayName("토큰 생성기(JwtProvider)는")
 public class JwtProviderTest extends DomainTest {
 
     @Test
     void 토큰을_생성할_수_있다() {
         // given
-        JwtProvider jwtProvider = new JwtProvider();
+        JwtProvider jwtProvider = new JwtProvider("7J206rKD7J2AIOyLnO2BrOumv+2CpOyeheuLiOuLpC4g7YWM7Iqk7Yq47Jqp", 12000000L, 20000000L);
 
         // when
-        String accessToken = jwtProvider.generateToken(1L);
+        String accessToken = jwtProvider.generateToken("1");
 
         // then
         assertNotNull(accessToken);
@@ -23,8 +26,9 @@ public class JwtProviderTest extends DomainTest {
     @Test
     void 인자로_받은_토큰을_파싱할_수_있다() {
         // given
-        JwtProvider jwtProvider = new JwtProvider();
-        String accessToken = jwtProvider.generateToken(1L);
+        JwtProvider jwtProvider = new JwtProvider("7J206rKD7J2AIOyLnO2BrOumv+2CpOyeheuLiOuLpC4g7YWM7Iqk7Yq47Jqp", 12000000L, 20000000L);
+
+        String accessToken = jwtProvider.generateToken("1");
 
         // when
         String subject = jwtProvider.getSubject(accessToken);

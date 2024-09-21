@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SignUpController.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @DisplayName("회원가입 컨트롤러(SignUpController)는 ")
-public class UserControllerTest extends ControllerTest {
+public class SignUpControllerTest extends ControllerTest {
 
     @MockBean
     private SignUpService signupService;
