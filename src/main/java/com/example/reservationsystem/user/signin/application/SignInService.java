@@ -1,6 +1,7 @@
 package com.example.reservationsystem.user.signin.application;
 
 import com.example.reservationsystem.user.signin.domain.JwtProvider;
+import com.example.reservationsystem.user.signin.dto.SignInResponse;
 import com.example.reservationsystem.user.signin.exception.UserAuthException;
 import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;
@@ -16,10 +17,11 @@ public class SignInService {
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 
-    public String signIn(String email, String password) {
+    public SignInResponse signIn(String email, String password) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UserAuthException(EMAIL_NOT_FOUND));
         user.validatePassword(password);
-        return jwtProvider.generateToken(user.getUserId().toString());
+        String accessToken = jwtProvider.generateToken(user.getUserId().toString());
+        return new SignInResponse(accessToken);
     }
 
 }

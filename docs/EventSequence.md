@@ -1,110 +1,132 @@
-## ERDiagram
 
+## 버스 조회
 
 ```mermaid
-erDiagram
-    USER {
-        int user_id PK
-        string email
-        string password
-        string name
-        string phone_number
-        string preferred_seat
-        datetime created_at
-        datetime updated_at
-    }
+sequenceDiagram
+    participant User as 승객
+    participant API as API
+    participant BusService as BusService
+    participant DB as Database
 
-    RESERVATION {
-        int reservation_id PK
-        int user_id FK
-        int seat_id FK
-        int bus_schedule_id FK
-        int reservation_status_id FK
-        datetime created_at
-        datetime updated_at
-    }
+    User ->> API: 버스 정보 요청(출발지, 도착지, 날짜)
+    API ->> BusService: 예약 가능 버스 정보 요청
+    BusService ->> DB: 버스 정보 조회
+    DB -->> BusService: 버스 정보 반환
+    BusService -->> API: 매진되지 않은 버스 정보 반환
+    API -->> User: 버스 정보들(버스 스케줄 ID) 반환
 
-    RESERVATION_STATUS {
-        int reservation_status_id PK
-        string status_name
-    }
+```
+### Description
 
-    SEAT {
-        int seat_id PK
-        int bus_id FK
-        string seat_number
-        int seat_status_id FK
-        datetime created_at
-        datetime updated_at
-    }
+- 예약 가능한 버스의 정보를 조회합니다.
 
-    SEAT_STATUS {
-        int seat_status_id PK
-        string status_name
-    }
 
-    BUS {
-        int bus_id PK
-        string bus_number
-        int capacity
-        datetime created_at
-        datetime updated_at
-    }
+## 좌석 조회
 
-    BUS_SCHEDULE {
-        int bus_schedule_id PK
-        int bus_id FK
-        string departure_station
-        string arrival_station
-        datetime departure_time
-        string time_slot
-        datetime created_at
-        datetime updated_at
-    }
+```mermaid
+sequenceDiagram
+    participant User as 승객
+    participant API as API
+    participant SeatService as SeatService
+    participant DB as Database
 
-    PAYMENT {
-        int payment_id PK
-        int reservation_id FK
-        decimal amount
-        int payment_status_id FK
-        int payment_method_id FK
-        datetime created_at
-        datetime updated_at
-    }
+    User ->> API: 좌석 정보 요청(버스 스케줄 ID)
+    API ->> SeatService: 예약 가능한 좌석 정보 요청(버스 스케줄 ID)
+    SeatService ->> DB: 좌석 정보 조회
+    DB -->> SeatService: 좌석 정보 반환
+    SeatService -->> API: 예약 가능 좌석 목록
+    API -->> User: 예약 가능 좌석 목록 반환(좌석 ID)
 
-    PAYMENT_STATUS {
-        int payment_status_id PK
-        string status_name
-    }
+```
 
-    PAYMENT_METHOD {
-        int payment_method_id PK
-        string method_name
-    }
 
-    NOTIFICATION {
-        int notification_id PK
-        int user_id FK
-        int notification_type_id FK
-        string message
-        datetime sent_at
-    }
+## 좌석 예약
 
-    NOTIFICATION_TYPE {
-        int notification_type_id PK
-        string type_name
-    }
+```mermaid
+sequenceDiagram
+    participant User as 승객
+    participant API as API
+    participant ReservationService as ReservationService
+    participant DB as Database
 
-    USER ||--o{ RESERVATION : "has"
-    RESERVATION ||--|| PAYMENT : "generates"
-    RESERVATION ||--o{ SEAT : "reserves"
-    SEAT ||--o{ BUS : "belongs to"
-    RESERVATION ||--|| RESERVATION_STATUS : "has status"
-    SEAT ||--|| SEAT_STATUS : "has status"
-    PAYMENT ||--|| PAYMENT_STATUS : "has status"
-    PAYMENT ||--|| PAYMENT_METHOD : "uses"
-    USER ||--o{ NOTIFICATION : "receives"
-    NOTIFICATION ||--|| NOTIFICATION_TYPE : "of type"
-    BUS ||--o{ BUS_SCHEDULE : "has"
+    User ->> API: 좌석 예약 요청(버스 스케줄 ID, 좌석 ID, 유저 ID)
+    API ->> ReservationService: 좌석 예약 요청
+    ReservationService ->> DB: 좌석 상태 확인
+    DB -->> ReservationService: 좌석 상태 반환
+    alt 좌석 예약 가능
+        ReservationService ->> DB: 예약 정보 저장, 선택한 좌석 상태 변경
+        DB -->> ReservationService: 예약 정보 저장 완료
+        ReservationService -->> API: 좌석 점유 성공, 좌석 ID 반환
+            Note over User, API: 결제 프로세스 진행(별도 시퀀스)
+    else 좌석 예약 불가능
+        ReservationService -->> API: 예약 실패(좌석 이미 예약됨)
+        API -->> User: 예약 실패(좌석 이미 예약됨)
+    end
+```
 
+### Description
+- 좌석 점유 이후 5분이 지나면, 별도의 스케쥴러로 점유를 해제합니다.
+
+## 결제
+
+```mermaid
+sequenceDiagram
+    participant User as 승객
+    participant API as API
+    participant PaymentService
+    participant ReservationService
+    participant DB as Database
+
+    User ->> API: 결제 요청(예약 ID)
+    API ->> PaymentService: 결제 처리 요청
+    PaymentService ->> DB: 사용자 잔액 확인
+    DB -->> PaymentService: 잔액 정보
+    alt 잔액이 충분함
+        PaymentService ->> DB: 결제 처리 및 기록
+        DB -->> PaymentService: 처리 완료
+        PaymentService -->> API: 결제 성공 및 결제 내역 반환
+        API ->> ReservationService: 좌석 상태 업데이트 요청
+        ReservationService ->> DB: 좌석 상태를 '결제 완료'로 변경
+        DB -->> ReservationService: 업데이트 완료
+        ReservationService -->> API: 좌석 상태 업데이트 성공
+    else 잔액이 부족함
+        PaymentService -->> API: 결제 실패(잔액 부족)
+        API -->> User: 결제 실패 메시지 (잔액 부족)
+    end
+```
+
+## 잔액 충전
+
+```mermaid
+sequenceDiagram
+    participant User as 승객
+    participant API
+    participant BalanceService
+    participant DB as Database
+    
+    User ->> API: 잔액 충전 요청(유저 ID, 충전 금액)
+    API ->> BalanceService: 잔액 충전 요청
+    BalanceService ->> DB: 현재 잔액 조회
+    DB -->> BalanceService: 현재 잔액 반환
+    BalanceService ->> DB: 잔액 업데이트
+    DB -->> BalanceService: 잔액 업데이트 완료
+    BalanceService -->> API: 충전 완료, 총 잔액 반환
+    API -->> User: 충전 성공 메시지, 총 잔액 정보
+```
+
+## 잔액 조회
+
+```mermaid
+sequenceDiagram
+    participant User as 승객
+    participant API
+    participant BalanceService
+    participant DB as Database
+    
+    User ->> API: 잔액 조회 요청(유저 ID)
+    API ->> BalanceService: 잔액 조회 요청
+    BalanceService ->> DB: 잔액 정보 조회
+    DB -->> BalanceService: 잔액 정보
+    BalanceService -->> API: 현재 잔액 정보
+    API -->> User: 현재 잔액 정보
 ```

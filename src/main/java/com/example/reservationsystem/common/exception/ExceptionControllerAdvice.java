@@ -1,4 +1,4 @@
-package com.example.reservationsystem.common;
+package com.example.reservationsystem.common.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

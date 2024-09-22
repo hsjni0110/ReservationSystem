@@ -1,5 +1,6 @@
 package com.example.reservationsystem.user.signup.domain;
 
+import com.example.reservationsystem.common.domain.BaseEntity;
 import com.example.reservationsystem.user.signin.exception.UserAuthException;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import static com.example.reservationsystem.user.signin.exception.UserAuthExcept
 @Table(name = "USERS")
 @Entity
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

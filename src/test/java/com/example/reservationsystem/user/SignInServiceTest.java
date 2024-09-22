@@ -3,6 +3,7 @@ package com.example.reservationsystem.user;
 import com.example.reservationsystem.common.ServiceTest;
 import com.example.reservationsystem.user.signin.application.SignInService;
 import com.example.reservationsystem.user.signin.domain.JwtProvider;
+import com.example.reservationsystem.user.signin.dto.SignInResponse;
 import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -38,10 +39,10 @@ public class SignInServiceTest extends ServiceTest {
         given(jwtProvider.generateToken("1")).willReturn("asdksfjsadfkj");
 
         // when
-        String accessToken = signInService.signIn("hanhan@naver.com", "12345");
+        SignInResponse signInResponse = signInService.signIn("hanhan@naver.com", "12345");
 
         // then
-        assertNotNull(accessToken);
+        assertNotNull(signInResponse.accessToken());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.reservationsystem.common;
+package com.example.reservationsystem.common.exception;
 
 public record ExceptionResponse(
         String message
