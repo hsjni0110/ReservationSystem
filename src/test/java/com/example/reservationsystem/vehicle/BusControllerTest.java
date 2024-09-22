@@ -1,9 +1,10 @@
-package com.example.reservationsystem.user;
+package com.example.reservationsystem.vehicle;
 
 import com.example.reservationsystem.common.ControllerTest;
-import com.example.reservationsystem.user.signup.application.SignUpService;
-import com.example.reservationsystem.user.signup.dto.SignUpRequest;
-import com.example.reservationsystem.user.signup.presentation.SignUpController;
+import com.example.reservationsystem.common.config.WebConfig;
+import com.example.reservationsystem.vehicle.application.BusService;
+import com.example.reservationsystem.vehicle.dto.BusCreateRequest;
+import com.example.reservationsystem.vehicle.presentation.BusController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("회원가입 컨트롤러(SignUpController)는 ")
-@WebMvcTest(SignUpController.class)
-public class SignUpControllerTest extends ControllerTest {
+@WebMvcTest(value = BusController.class)
+@DisplayName("버스 컨트롤러(BusController)는")
+public class BusControllerTest extends ControllerTest {
 
     @MockBean
-    private SignUpService signupService;
+    private BusService busService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,16 +33,14 @@ public class SignUpControllerTest extends ControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void 유저_회원가입을_할_수_있다() throws Exception{
+    void 버스를_생성할_수_있다() throws Exception{
         // given
-        SignUpRequest request = new SignUpRequest("hanhan@naver.com", "12345", "hans", "010-0000-0000");
+        willDoNothing().given(busService).createBus(any(String.class), any(String.class), any(Integer.class));
+        BusCreateRequest busCreateRequest = new BusCreateRequest("강남고속", "123", 30);
 
-        // when
-        given(signupService.signUp(any(String.class), any(String.class), any(String.class), any(String.class))).willReturn(1L);
-
-        // then
-        mockMvc.perform(post("/sign-up")
-                .content(objectMapper.writeValueAsString(request))
+        // when, then
+        mockMvc.perform(post("/bus")
+                .content(objectMapper.writeValueAsString(busCreateRequest))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
