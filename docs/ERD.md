@@ -45,6 +45,7 @@ erDiagram
 
     BUS {
         int bus_id PK
+        string bus_name
         string bus_number
         int capacity
         datetime created_at
