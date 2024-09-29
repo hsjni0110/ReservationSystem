@@ -1,24 +1,24 @@
 
-## 버스 조회
+## 예약 가능 스케줄 조회
 
 ```mermaid
 sequenceDiagram
     participant User as 승객
     participant API as API
-    participant BusService as BusService
+    participant RouteService as RouteService
     participant DB as Database
 
-    User ->> API: 버스 정보 요청(출발지, 도착지, 날짜)
-    API ->> BusService: 예약 가능 버스 정보 요청
-    BusService ->> DB: 버스 정보 조회
-    DB -->> BusService: 버스 정보 반환
-    BusService -->> API: 매진되지 않은 버스 정보 반환
-    API -->> User: 버스 정보들(버스 스케줄 ID) 반환
+    User ->> API: 스케줄 정보 요청(출발지, 도착지, 날짜)
+    API ->> RouteService: 예약 가능 스케줄 정보 요청
+    RouteService ->> DB: 스케줄 정보 조회
+    DB -->> RouteService: 스케줄 정보 반환
+    RouteService -->> API: 매진되지 않은 스케줄 정보 반환
+    API -->> User: 스케줄 정보들(스케줄 ID) 반환
 
 ```
 ### Description
 
-- 예약 가능한 버스의 정보를 조회합니다.
+- 예약 가능한 스케줄의 정보를 조회합니다.
 
 
 ## 좌석 조회

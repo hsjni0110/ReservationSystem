@@ -27,4 +27,8 @@ public class Bus extends BaseEntity {
         return new Bus(busName, busNumber, capacity);
     }
 
+    public int getBusCapacity() {
+        return this.capacity;
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.example.reservationsystem.vehicle.application;
 
 import com.example.reservationsystem.vehicle.domain.Bus;
-import com.example.reservationsystem.vehicle.domain.BusRepository;
+import com.example.reservationsystem.vehicle.domain.repository.BusRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

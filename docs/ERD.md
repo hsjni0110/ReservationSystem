@@ -18,9 +18,9 @@ erDiagram
         int reservation_id PK
         int user_id FK
         int seat_id FK
-        int bus_schedule_id FK
+        int route_schedule_id FK
         int reservation_status_id FK
-        datetime created_at
+        datetime created_at  
         datetime updated_at
     }
 
@@ -34,6 +34,7 @@ erDiagram
         int bus_id FK
         string seat_number
         int seat_status_id FK
+        bool is_reserved
         datetime created_at
         datetime updated_at
     }
@@ -52,13 +53,23 @@ erDiagram
         datetime updated_at
     }
 
-    BUS_SCHEDULE {
-        int bus_schedule_id PK
-        int bus_id FK
+    ROUTE {
+        int route_id PK
         string departure_station
         string arrival_station
-        datetime departure_time
+    }
+
+    ROUTE_TIME_SLOT {
+        int route_time_slot_id PK
+        int route_id FK
         string time_slot
+    }
+
+    ROUTE_SCHEDULE {
+        int route_schedule_id PK
+        int route_time_slot_id FK
+        int bus_id FK
+        int available_seats
         datetime created_at
         datetime updated_at
     }
@@ -106,6 +117,8 @@ erDiagram
     PAYMENT ||--|| PAYMENT_METHOD : "uses"
     USER ||--o{ NOTIFICATION : "receives"
     NOTIFICATION ||--|| NOTIFICATION_TYPE : "of type"
-    BUS ||--o{ BUS_SCHEDULE : "has"
+    BUS ||--o{ ROUTE_SCHEDULE : "assigned to"
+    ROUTE ||--o{ ROUTE_TIME_SLOT : "has time slots"
+    ROUTE_TIME_SLOT ||--o{ ROUTE_SCHEDULE : "used in schedule"
 
 ```
