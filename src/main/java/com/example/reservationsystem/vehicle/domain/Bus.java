@@ -2,6 +2,7 @@ package com.example.reservationsystem.vehicle.domain;
 
 import com.example.reservationsystem.common.domain.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -11,6 +12,7 @@ public class Bus extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long busId;
 
     private String busName;

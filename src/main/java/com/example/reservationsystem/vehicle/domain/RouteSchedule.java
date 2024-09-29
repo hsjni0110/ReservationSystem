@@ -21,6 +21,7 @@ public class RouteSchedule extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bus")
+    @Getter
     private Bus bus;
     private int availableSeats;
 

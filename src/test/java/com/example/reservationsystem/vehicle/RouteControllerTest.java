@@ -76,10 +76,10 @@ public class RouteControllerTest extends ControllerTest {
     }
     
     @Test
-    void 출발지와_목적지에_따라_비어있는_시간대_목록을_조회할_수_있다() throws Exception {
+    void 출발지와_목적지에_따라_비어있는_경로_당_시간대_목록을_조회할_수_있다() throws Exception {
         // given
         RouteScheduleRequest routeTimeRequest = new RouteScheduleRequest("대전복합터미널", "센트럴시티");
-        RouteScheduleResponse routeTimeResponse = new RouteScheduleResponse(1L, "10:00");
+        RouteScheduleResponse routeTimeResponse = new RouteScheduleResponse(1L, 1L, "10:00");
         given(routeService.getAvailableRouteSchedules(any(String.class), any(String.class))).willReturn(List.of(routeTimeResponse));
 
         // when, then
@@ -87,6 +87,7 @@ public class RouteControllerTest extends ControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(routeTimeRequest)))
                 .andExpect(jsonPath("$[0].routeScheduleId").value(1L))
+                .andExpect(jsonPath("$[0].busId").value(1L))
                 .andExpect(jsonPath("$[0].timeSlot").value("10:00"));
     }
 

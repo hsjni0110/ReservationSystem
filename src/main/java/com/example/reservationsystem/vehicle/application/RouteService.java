@@ -46,7 +46,7 @@ public class RouteService {
         List<RouteSchedule> routeSchedules = routeScheduleRepository.findByRouteTimeSlotIn(route.getRouteTimeSlots());
         return routeSchedules.stream()
                 .filter(RouteSchedule::isAvailableSeats)
-                .map(routeSchedule -> new RouteScheduleResponse(routeSchedule.getRouteScheduleId(), routeSchedule.getTimeSlot()))
+                .map(routeSchedule -> new RouteScheduleResponse(routeSchedule.getRouteScheduleId(), routeSchedule.getBus().getBusId(), routeSchedule.getTimeSlot()))
                 .toList();
     }
 

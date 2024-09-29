@@ -17,10 +17,9 @@ erDiagram
     RESERVATION {
         int reservation_id PK
         int user_id FK
-        int seat_id FK
-        int route_schedule_id FK
+        int scheduled_seat_id FK
         int reservation_status_id FK
-        datetime created_at  
+        datetime created_at
         datetime updated_at
     }
 
@@ -34,14 +33,8 @@ erDiagram
         int bus_id FK
         string seat_number
         int seat_status_id FK
-        bool is_reserved
         datetime created_at
         datetime updated_at
-    }
-
-    SEAT_STATUS {
-        int seat_status_id PK
-        string status_name
     }
 
     BUS {
@@ -69,8 +62,18 @@ erDiagram
         int route_schedule_id PK
         int route_time_slot_id FK
         int bus_id FK
+        datetime schedule_date
         int available_seats
         datetime created_at
+        datetime updated_at
+    }
+
+    SCHEDULED_SEAT {
+        int scheduled_seat_id PK
+        int seat_id FK
+        int route_schedule_id FK
+        bool is_reserved
+        datetime reserved_at
         datetime updated_at
     }
 
@@ -109,16 +112,16 @@ erDiagram
 
     USER ||--o{ RESERVATION : "has"
     RESERVATION ||--|| PAYMENT : "generates"
-    RESERVATION ||--o{ SEAT : "reserves"
-    SEAT ||--o{ BUS : "belongs to"
+    RESERVATION ||--o{ SCHEDULED_SEAT : "reserves"
     RESERVATION ||--|| RESERVATION_STATUS : "has status"
-    SEAT ||--|| SEAT_STATUS : "has status"
     PAYMENT ||--|| PAYMENT_STATUS : "has status"
     PAYMENT ||--|| PAYMENT_METHOD : "uses"
     USER ||--o{ NOTIFICATION : "receives"
     NOTIFICATION ||--|| NOTIFICATION_TYPE : "of type"
+    BUS ||--o{ SEAT : "contains"
     BUS ||--o{ ROUTE_SCHEDULE : "assigned to"
     ROUTE ||--o{ ROUTE_TIME_SLOT : "has time slots"
     ROUTE_TIME_SLOT ||--o{ ROUTE_SCHEDULE : "used in schedule"
-
+    ROUTE_SCHEDULE ||--o{ SCHEDULED_SEAT : "has seat status"
+    SCHEDULED_SEAT ||--|| SEAT : "references"
 ```
