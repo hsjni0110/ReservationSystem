@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,6 +45,7 @@ public class RouteControllerTest extends ControllerTest {
         RouteCreateRequest routeCreateRequest = new RouteCreateRequest(
                 "대전복합터미널",
                 "센트럴시티",
+                LocalDate.of(2024, 10, 9),
                 List.of(
                         new RouteCreateRequest.TimeSlot("10:00"),
                         new RouteCreateRequest.TimeSlot("11:00"),
@@ -53,7 +55,7 @@ public class RouteControllerTest extends ControllerTest {
                         new RouteCreateRequest.TimeSlot("19:00")
                 )
         );
-        willDoNothing().given(routeService).createRoute(any(String.class), any(String.class), any(List.class));
+        willDoNothing().given(routeService).createRoute(any(String.class), any(String.class), any(LocalDate.class), any(List.class));
 
         // when, then
         mockMvc.perform(post("/route")
@@ -78,9 +80,9 @@ public class RouteControllerTest extends ControllerTest {
     @Test
     void 출발지와_목적지에_따라_비어있는_경로_당_시간대_목록을_조회할_수_있다() throws Exception {
         // given
-        RouteScheduleRequest routeTimeRequest = new RouteScheduleRequest("대전복합터미널", "센트럴시티");
+        RouteScheduleRequest routeTimeRequest = new RouteScheduleRequest("대전복합터미널", "센트럴시티", LocalDate.of(2024, 10, 10));
         RouteScheduleResponse routeTimeResponse = new RouteScheduleResponse(1L, 1L, "10:00");
-        given(routeService.getAvailableRouteSchedules(any(String.class), any(String.class))).willReturn(List.of(routeTimeResponse));
+        given(routeService.getAvailableRouteSchedules(any(String.class), any(String.class), any(LocalDate.class))).willReturn(List.of(routeTimeResponse));
 
         // when, then
         mockMvc.perform(post("/route/route-schedules")

@@ -22,12 +22,6 @@ public class AuthArgumentResolverTest extends ControllerTest {
     @Autowired
     private HandlerMethodArgumentResolver authArgumentResolver;
 
-    @MockBean
-    private BearerExtractor bearerExtractor;
-
-    @MockBean
-    private JwtProvider jwtProvider;
-
     @BeforeEach
     public void setUp() {
         authArgumentResolver = new AuthArgumentResolver(bearerExtractor, jwtProvider);

@@ -26,7 +26,7 @@ public class RouteController {
     public ResponseEntity<Void> createRoute(
             @RequestBody RouteCreateRequest request
     ) {
-        routeService.createRoute(request.departure(), request.arrival(), request.timeSlots().stream().map(RouteCreateRequest.TimeSlot::time).toList());
+        routeService.createRoute(request.departure(), request.arrival(), request.scheduleDate(), request.timeSlots().stream().map(RouteCreateRequest.TimeSlot::time).toList());
         return ResponseEntity.created(URI.create("/route/" + request.departure() + "/" + request.arrival())).build();
     }
 
@@ -42,7 +42,7 @@ public class RouteController {
     public ResponseEntity<List<RouteScheduleResponse>> getAvailableRouteSchedules(
             @RequestBody RouteScheduleRequest request
     ) {
-        List<RouteScheduleResponse> availableRouteSchedules = routeService.getAvailableRouteSchedules(request.departure(), request.arrival());
+        List<RouteScheduleResponse> availableRouteSchedules = routeService.getAvailableRouteSchedules(request.departure(), request.arrival(), request.scheduleDate());
         return ResponseEntity.ok(availableRouteSchedules);
     }
 

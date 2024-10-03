@@ -31,8 +31,7 @@ erDiagram
     SEAT {
         int seat_id PK
         int bus_id FK
-        string seat_number
-        int seat_status_id FK
+        int seat_number
         datetime created_at
         datetime updated_at
     }
@@ -50,6 +49,7 @@ erDiagram
         int route_id PK
         string departure_station
         string arrival_station
+        datetime schedule_date
     }
 
     ROUTE_TIME_SLOT {
@@ -62,7 +62,6 @@ erDiagram
         int route_schedule_id PK
         int route_time_slot_id FK
         int bus_id FK
-        datetime schedule_date
         int available_seats
         datetime created_at
         datetime updated_at
@@ -119,9 +118,9 @@ erDiagram
     USER ||--o{ NOTIFICATION : "receives"
     NOTIFICATION ||--|| NOTIFICATION_TYPE : "of type"
     BUS ||--o{ SEAT : "contains"
-    BUS ||--o{ ROUTE_SCHEDULE : "assigned to"
+    BUS ||--|| ROUTE_SCHEDULE : "assigned to"
     ROUTE ||--o{ ROUTE_TIME_SLOT : "has time slots"
-    ROUTE_TIME_SLOT ||--o{ ROUTE_SCHEDULE : "used in schedule"
+    ROUTE_TIME_SLOT ||--|| ROUTE_SCHEDULE : "used in schedule"
     ROUTE_SCHEDULE ||--o{ SCHEDULED_SEAT : "has seat status"
     SCHEDULED_SEAT ||--|| SEAT : "references"
 ```

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +26,18 @@ public class Route {
     private String departure;
     private String arrival;
 
-    public Route(List<RouteTimeSlot> routeTimeSlots, String departure, String arrival) {
+    @Getter
+    private LocalDate scheduleDate;
+
+    public Route(List<RouteTimeSlot> routeTimeSlots, String departure, String arrival, LocalDate scheduleDate) {
         this.routeTimeSlots = routeTimeSlots;
         this.departure = departure;
         this.arrival = arrival;
+        this.scheduleDate = scheduleDate;
     }
 
-    public static Route create(String departure, String arrival, List<String> times) {
-        return new Route(times.stream().map(RouteTimeSlot::new).toList(), departure, arrival);
+    public static Route create(String departure, String arrival, LocalDate scheduleDate, List<String> times) {
+        return new Route(times.stream().map(RouteTimeSlot::new).toList(), departure, arrival, scheduleDate);
     }
 
     public RouteTimeSlot getMatchedRouteTimeSlot(String time) {
