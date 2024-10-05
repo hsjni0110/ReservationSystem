@@ -4,6 +4,7 @@ import com.example.reservationsystem.common.exception.BaseExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
@@ -11,6 +12,8 @@ public enum VehicleExceptionType implements BaseExceptionType {
 
     ROUTE_NOT_FOUND(NOT_FOUND, "Route Not Found"),
     ROUTE_TIME_SLOT_NOT_FOUND(NOT_FOUND, "Route Time Slot Not Found"),
+    DUPLICATE_ROUTE(CONFLICT, "Duplicate Route"),
+    DUPLICATE_DISPATCH_TIME(CONFLICT, "Duplicate Dispatch Time"),
     ;
 
     private final HttpStatus httpStatus;
@@ -18,12 +21,12 @@ public enum VehicleExceptionType implements BaseExceptionType {
 
     @Override
     public HttpStatus httpStatus() {
-        return null;
+        return httpStatus;
     }
 
     @Override
     public String errorMessage() {
-        return "";
+        return message;
     }
 
 }

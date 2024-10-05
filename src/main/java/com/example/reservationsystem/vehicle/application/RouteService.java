@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.example.reservationsystem.vehicle.exception.VehicleExceptionType.ROUTE_NOT_FOUND;
+import static com.example.reservationsystem.vehicle.exception.VehicleExceptionType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +29,10 @@ public class RouteService {
 
     @Transactional
     public void createRoute(String departure, String arrival, LocalDate scheduleDate, List<String> times) {
+        routeRepository.findByDepartureAndArrivalAndScheduleDate(departure, arrival, scheduleDate)
+                .ifPresent(route -> {
+                    throw new VehicleException(DUPLICATE_ROUTE);
+                });
         Route route = Route.create(departure, arrival, scheduleDate, times);
         routeRepository.save(route);
     }
@@ -37,6 +41,11 @@ public class RouteService {
     public void dispatchBus(Long routeId, Long busId, String timeSlot) {
         Bus bus = busRepository.getByIdOrThrow(busId);
         Route route = routeRepository.getByIdOrThrow(routeId);
+        routeScheduleRepository.findByBusAndRouteTimeSlot(bus, route.getMatchedRouteTimeSlot(timeSlot)).ifPresent(
+                routeSchedule -> {
+                    throw new VehicleException(DUPLICATE_DISPATCH_TIME);
+                }
+        );
         RouteSchedule routeSchedule = RouteSchedule.create(bus, route.getMatchedRouteTimeSlot(timeSlot));
         routeScheduleRepository.save(routeSchedule);
     }
