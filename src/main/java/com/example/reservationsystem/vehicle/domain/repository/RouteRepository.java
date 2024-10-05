@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface RouteRepository extends JpaRepository<Route, Long> {
 
     Optional<Route> findById(Long id);
-    Optional<Route> findByDepartureAndArrivalAAndScheduleDate(String departure, String arrival, LocalDate scheduleDate);
+    Optional<Route> findByDepartureAndArrivalAndScheduleDate(String departure, String arrival, LocalDate scheduleDate);
 
     default Route getByIdOrThrow(Long id) {
         return findById(id).orElseThrow(EntityNotFoundException::new);

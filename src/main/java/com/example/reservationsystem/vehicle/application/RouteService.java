@@ -43,7 +43,7 @@ public class RouteService {
 
     @Transactional(readOnly = true)
     public List<RouteScheduleResponse> getAvailableRouteSchedules(String departure, String arrival, LocalDate scheduleDate) {
-        Route route = routeRepository.findByDepartureAndArrivalAAndScheduleDate(departure, arrival, scheduleDate).orElseThrow(() -> new VehicleException(ROUTE_NOT_FOUND));
+        Route route = routeRepository.findByDepartureAndArrivalAndScheduleDate(departure, arrival, scheduleDate).orElseThrow(() -> new VehicleException(ROUTE_NOT_FOUND));
         List<RouteSchedule> routeSchedules = routeScheduleRepository.findByRouteTimeSlotIn(route.getRouteTimeSlots());
         return routeSchedules.stream()
                 .filter(RouteSchedule::isAvailableSeats)

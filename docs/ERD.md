@@ -23,11 +23,6 @@ erDiagram
         datetime updated_at
     }
 
-    RESERVATION_STATUS {
-        int reservation_status_id PK
-        string status_name
-    }
-
     SEAT {
         int seat_id PK
         int bus_id FK
@@ -112,7 +107,6 @@ erDiagram
     USER ||--o{ RESERVATION : "has"
     RESERVATION ||--|| PAYMENT : "generates"
     RESERVATION ||--o{ SCHEDULED_SEAT : "reserves"
-    RESERVATION ||--|| RESERVATION_STATUS : "has status"
     PAYMENT ||--|| PAYMENT_STATUS : "has status"
     PAYMENT ||--|| PAYMENT_METHOD : "uses"
     USER ||--o{ NOTIFICATION : "receives"

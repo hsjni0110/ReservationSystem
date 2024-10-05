@@ -9,7 +9,10 @@ import java.util.Optional;
 
 public interface ScheduledSeatRepository extends JpaRepository<ScheduledSeat, Long> {
 
-
     List<ScheduledSeat> findByRouteSchedule(RouteSchedule routeSchedule);
+
+    default ScheduledSeat getByIdOrThrow(Long id) {
+        return findById(id).orElseThrow(() -> new RuntimeException("Scheduled Seat with id " + id + " not found"));
+    }
 
 }

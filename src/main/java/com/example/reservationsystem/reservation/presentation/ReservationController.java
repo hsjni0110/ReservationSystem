@@ -1,14 +1,14 @@
 package com.example.reservationsystem.reservation.presentation;
 
+import com.example.reservationsystem.auth.Auth;
 import com.example.reservationsystem.reservation.application.ReservationService;
 import com.example.reservationsystem.reservation.dto.AvailableSeatRequest;
 import com.example.reservationsystem.reservation.dto.ScheduledSeatResponse;
+import com.example.reservationsystem.reservation.dto.SeatReservationRequest;
+import com.example.reservationsystem.reservation.dto.SeatReservationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,10 +21,19 @@ public class ReservationController {
 
     @GetMapping("/seats")
     public ResponseEntity<List<ScheduledSeatResponse>> getAvailableSeats(
-            @ModelAttribute AvailableSeatRequest request
+            @RequestBody AvailableSeatRequest request
     ) {
         List<ScheduledSeatResponse> scheduledSeats = reservationService.getSeatsByRoute(request.departure(), request.arrival(), request.specificDate(), request.timeSlot());
         return ResponseEntity.ok(scheduledSeats);
+    }
+
+    @PostMapping("/seat")
+    public ResponseEntity<SeatReservationResponse> preserveSeat(
+            @RequestBody SeatReservationRequest request,
+            @Auth Long userId
+    ) {
+        SeatReservationResponse seatReservationResponse = reservationService.preserveSeat(userId, request.routeScheduleId(), request.scheduleSeatIds());
+        return ResponseEntity.ok(seatReservationResponse);
     }
 
 }
