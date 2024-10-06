@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 public enum ReservationExceptionType implements BaseExceptionType {
+    RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Reservation not found"),
     ROUTE_NOT_FOUND(HttpStatus.NOT_FOUND, "Route Not Found"),
     ROUTE_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "Route Schedule Not Found"),
     SCHEDULED_SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "Scheduled Seat Not Found"),

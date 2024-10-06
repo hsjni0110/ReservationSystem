@@ -13,6 +13,9 @@ public class RouteTimeSlot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long routeTimeSlotId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Route route;
+
     @Getter
     private String timeSlot;
 

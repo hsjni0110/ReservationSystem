@@ -1,4 +1,4 @@
-package com.example.reservationsystem.reservation.application;
+package com.example.reservationsystem.reservation.domain.manager;
 
 import com.example.reservationsystem.reservation.domain.Reservation;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;

@@ -2,6 +2,7 @@ package com.example.reservationsystem.reservation.application;
 
 import com.example.reservationsystem.reservation.domain.Reservation;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;
+import com.example.reservationsystem.reservation.domain.manager.ReservationManager;
 import com.example.reservationsystem.reservation.domain.repository.ScheduledSeatRepository;
 import com.example.reservationsystem.reservation.dto.ScheduledSeatResponse;
 import com.example.reservationsystem.reservation.dto.SeatReservationResponse;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static com.example.reservationsystem.reservation.exception.ReservationExceptionType.*;
 
@@ -54,6 +54,11 @@ public class ReservationService {
     private void validate(Long routeScheduleId, List<Long> scheduleSeatId) {
         validateRouteScheduleExist(routeScheduleId);
         validateScheduledSeatIsReserved(scheduleSeatId);
+        validateReserveTime(routeScheduleId);
+    }
+
+    private void validateReserveTime(Long routeScheduleId) {
+        // 출발 시간 15분 이전인지 확인
     }
 
     private void validateRouteScheduleExist(Long routeScheduleId) {

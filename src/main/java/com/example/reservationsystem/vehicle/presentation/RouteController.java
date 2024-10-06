@@ -34,7 +34,7 @@ public class RouteController {
     public ResponseEntity<Void> createRouteSchedule(
             @RequestBody RouteScheduleCreateRequest request
     ) {
-        routeService.dispatchBus(request.routeId(), request.busId(), request.timeSlot());
+        routeService.dispatchBus(request.routeId(), request.busId(), request.timeSlot(), request.seatPrice());
         return ResponseEntity.created(URI.create("/route/" + request.routeId())).build();
     }
 

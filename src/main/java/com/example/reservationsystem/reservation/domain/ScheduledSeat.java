@@ -1,6 +1,8 @@
 package com.example.reservationsystem.reservation.domain;
 
 import com.example.reservationsystem.common.domain.BaseEntity;
+import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.payment.infra.MoneyConverter;
 import com.example.reservationsystem.reservation.exception.ReservationException;
 import com.example.reservationsystem.vehicle.domain.RouteSchedule;
 import jakarta.persistence.*;
@@ -29,16 +31,23 @@ public class ScheduledSeat extends BaseEntity {
     @Setter
     private Reservation reservation;
 
+    @Column(name = "seat_price")
+    @Getter
+    @Convert(converter = MoneyConverter.class)
+    private Money seatPrice;
+
+    @Column(name = "is_reserved")
     private Boolean isReserved;
 
-    public ScheduledSeat(Integer seatId, RouteSchedule routeSchedule, boolean isReserved) {
+    public ScheduledSeat(Integer seatId, RouteSchedule routeSchedule, boolean isReserved, long seatPrice) {
         this.seatId = seatId;
         this.routeSchedule = routeSchedule;
         this.isReserved = isReserved;
+        this.seatPrice = Money.wons(seatPrice);
     }
 
-    public static ScheduledSeat of(Integer seatId, RouteSchedule routeSchedule) {
-        return new ScheduledSeat(seatId, routeSchedule, false);
+    public static ScheduledSeat of(Integer seatId, RouteSchedule routeSchedule, long seatPrice) {
+        return new ScheduledSeat(seatId, routeSchedule, false, seatPrice);
     }
 
     public void isReserved() {

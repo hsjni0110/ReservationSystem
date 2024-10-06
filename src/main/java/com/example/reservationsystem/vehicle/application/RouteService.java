@@ -38,7 +38,7 @@ public class RouteService {
     }
 
     @Transactional
-    public void dispatchBus(Long routeId, Long busId, String timeSlot) {
+    public void dispatchBus(Long routeId, Long busId, String timeSlot, long seatPrice) {
         Bus bus = busRepository.getByIdOrThrow(busId);
         Route route = routeRepository.getByIdOrThrow(routeId);
         routeScheduleRepository.findByBusAndRouteTimeSlot(bus, route.getMatchedRouteTimeSlot(timeSlot)).ifPresent(
@@ -46,7 +46,7 @@ public class RouteService {
                     throw new VehicleException(DUPLICATE_DISPATCH_TIME);
                 }
         );
-        RouteSchedule routeSchedule = RouteSchedule.create(bus, route.getMatchedRouteTimeSlot(timeSlot));
+        RouteSchedule routeSchedule = RouteSchedule.create(bus, route.getMatchedRouteTimeSlot(timeSlot), seatPrice);
         routeScheduleRepository.save(routeSchedule);
     }
 

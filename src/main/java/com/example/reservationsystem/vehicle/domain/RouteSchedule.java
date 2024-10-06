@@ -34,20 +34,20 @@ public class RouteSchedule extends BaseEntity {
 
     private int availableSeats;
 
-    public RouteSchedule(RouteTimeSlot routeTimeSlot, Bus bus, int availableSeats) {
+    public RouteSchedule(RouteTimeSlot routeTimeSlot, Bus bus, int availableSeats, long seatPrice) {
         this.routeTimeSlot = routeTimeSlot;
         this.bus = bus;
         this.availableSeats = availableSeats;
-        createScheduledSeats(availableSeats, this);
+        createScheduledSeats(availableSeats, this, seatPrice);
     }
 
-    private void createScheduledSeats(int availableSeats, RouteSchedule routeSchedule) {
+    private void createScheduledSeats(int availableSeats, RouteSchedule routeSchedule, long seatPrice) {
         IntStream.range(0, availableSeats)
-                .forEach(i -> scheduledSeats.add(ScheduledSeat.of(i, routeSchedule)));
+                .forEach(i -> scheduledSeats.add(ScheduledSeat.of(i, routeSchedule, seatPrice)));
     }
 
-    public static RouteSchedule create(Bus bus, RouteTimeSlot timeSlot) {
-        return new RouteSchedule(timeSlot, bus, bus.getBusCapacity());
+    public static RouteSchedule create(Bus bus, RouteTimeSlot timeSlot, long seatPrice) {
+        return new RouteSchedule(timeSlot, bus, bus.getBusCapacity(), seatPrice);
     }
 
     public boolean isAvailableSeats() {

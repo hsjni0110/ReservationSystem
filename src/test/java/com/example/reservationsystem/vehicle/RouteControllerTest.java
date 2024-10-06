@@ -67,8 +67,8 @@ public class RouteControllerTest extends ControllerTest {
     @Test
     void 생성된_시간대에_버스를_배차할_수_있다() throws Exception {
         // given
-        RouteScheduleCreateRequest request = new RouteScheduleCreateRequest(1L, 1L, "10:00");
-        willDoNothing().given(routeService).dispatchBus(any(Long.class), any(Long.class), any(String.class));
+        RouteScheduleCreateRequest request = new RouteScheduleCreateRequest(1L, 1L, 15000L,"10:00");
+        willDoNothing().given(routeService).dispatchBus(any(Long.class), any(Long.class), any(String.class), any(Long.class));
 
         // when, then
         mockMvc.perform(post("/route/dispatch/bus")

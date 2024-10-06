@@ -1,6 +1,7 @@
 package com.example.reservationsystem.reservation.domain;
 
 import com.example.reservationsystem.common.domain.BaseEntity;
+import com.example.reservationsystem.payment.exception.PaymentException;
 import com.example.reservationsystem.user.signup.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.reservationsystem.payment.exception.PaymentExceptionType.USER_NOT_MATCHED;
 
 @Entity
 @Table(name = "RESERVEATION")
@@ -53,6 +56,20 @@ public class Reservation extends BaseEntity {
 
     public static Reservation from(User user, List<ScheduledSeat> scheduledSeat) {
         return new Reservation(user, scheduledSeat, ReservationStatus.PENDING);
+    }
+
+    public void authorizeUser(User user) {
+        if (!this.user.equals(user)) {
+            throw new PaymentException(USER_NOT_MATCHED);
+        }
+    }
+
+    public boolean isPayable() {
+        return status == ReservationStatus.PENDING;
+    }
+
+    public void successPayment() {
+        this.status = ReservationStatus.RESERVED;
     }
 
 }
