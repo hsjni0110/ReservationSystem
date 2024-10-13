@@ -1,4 +1,4 @@
-package com.example.reservationsystem.vehicle;
+package com.example.reservationsystem.vehicle.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.vehicle.application.RouteService;

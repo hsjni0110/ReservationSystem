@@ -50,16 +50,4 @@ public class Payment extends BaseEntity {
         return new Payment(user, reservation, totalPrice, PaymentStatus.PAYED);
     }
 
-    public static Payment failedFrom(User user, Reservation reservation) {
-        Money totalPrice = reservation.getScheduledSeats()
-                .stream()
-                .map(ScheduledSeat::getSeatPrice)
-                .reduce(Money.ZERO, Money::add);
-        return new Payment(user, reservation, totalPrice, PaymentStatus.NOT_PAYED);
-    }
-
-    public void successPayment() {
-        this.paymentStatus = PaymentStatus.PAYED;
-    }
-
 }

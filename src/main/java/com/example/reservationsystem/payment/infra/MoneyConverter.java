@@ -4,17 +4,19 @@ import com.example.reservationsystem.account.domain.Money;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+import java.math.BigDecimal;
+
 @Converter(autoApply = true)
-public class MoneyConverter implements AttributeConverter<Money, Long> {
+public class MoneyConverter implements AttributeConverter<Money, BigDecimal> {
 
     @Override
-    public Long convertToDatabaseColumn(Money money) {
-        return money.getAmount().longValue();
+    public BigDecimal convertToDatabaseColumn(Money money) {
+        return money != null ? money.getAmount() : BigDecimal.ZERO;
     }
 
     @Override
-    public Money convertToEntityAttribute(Long amount) {
-        return Money.wons(amount);
+    public Money convertToEntityAttribute(BigDecimal amount) {
+        return amount != null ? new Money(amount) : Money.ZERO;
     }
 
 }

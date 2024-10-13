@@ -3,6 +3,8 @@ package com.example.reservationsystem.user.signup.domain;
 import com.example.reservationsystem.common.domain.BaseEntity;
 import com.example.reservationsystem.user.signin.exception.UserAuthException;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import static com.example.reservationsystem.user.signin.exception.UserAuthExcept
 @Table(name = "USERS")
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User extends BaseEntity {
 
     @Id

@@ -22,21 +22,19 @@ public class PaymentManager {
     private final AccountRepository accountRepository;
     private final PaymentRepository paymentRepository;
 
-    public Payment executePayment(User user, Reservation reservation) {
+    public Payment executePayment( User user, Reservation reservation ) {
         try {
-            Account account = accountRepository.findByUser(user).orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+            Account account = accountRepository.findByUser( user ).orElseThrow(() -> new AccountException( ACCOUNT_NOT_FOUND ));
             Money totalPrice = reservation.getScheduledSeats()
                     .stream()
-                    .map(ScheduledSeat::getSeatPrice)
-                    .reduce(Money.ZERO, Money::add);
-            account.pay(totalPrice);
-            Payment payment = paymentRepository.findByUserAndReservation(user, reservation)
-                    .map(existed -> { existed.successPayment(); return existed; })
-                    .orElseGet(() -> Payment.successFrom(user, reservation, totalPrice));
+                    .map( ScheduledSeat::getSeatPrice )
+                    .reduce( Money.ZERO, Money::add );
+
+            account.pay( totalPrice );
+
+            Payment payment = Payment.successFrom(user, reservation, totalPrice);
             return paymentRepository.save(payment);
         } catch (Exception e) {
-            Payment payment = Payment.failedFrom(user, reservation);
-            paymentRepository.save(payment);
             throw new RuntimeException(e);
         }
     }

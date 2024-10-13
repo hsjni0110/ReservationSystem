@@ -1,4 +1,4 @@
-package com.example.reservationsystem.payment;
+package com.example.reservationsystem.payment.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.common.type.PaymentStatus;

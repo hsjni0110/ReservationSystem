@@ -12,6 +12,7 @@ import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.reservationsystem.payment.exception.PaymentExceptionType.NOT_PAYABLE;
 
@@ -24,36 +25,37 @@ public class PaymentService {
     private final PaymentManager paymentManager;
     private final PaymentRepository paymentRepository;
 
-    public PaymentResponse pay(Long userId, Long reservationId) {
-        User user = userRepository.getByIdOrThrow(userId);
-        Reservation reservation = reservationRepository.getByIdOrThrow(reservationId);
-        validate(user, reservation);
-        Payment payment = paymentManager.executePayment(user, reservation);
+    @Transactional
+    public PaymentResponse pay( Long userId, Long reservationId ) {
+        User user = userRepository.getByIdOrThrow( userId );
+        Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
+        validate( user, reservation );
+        Payment payment = paymentManager.executePayment( user, reservation );
         reservation.successPayment();
-        return new PaymentResponse(payment.getPaymentId(), payment.getTotalPrice().getAmount(), payment.getPaymentStatus(), payment.getCreatedAt());
+        return new PaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getAmount(), payment.getPaymentStatus(), payment.getCreatedAt() );
     }
 
-    private void validate(User user, Reservation reservation) {
-        validateUser(user, reservation);
-        validateReservationStatus(reservation);
-        validatePaymentStatus(user, reservation);
+    private void validate( User user, Reservation reservation ) {
+        validateUser( user, reservation );
+        validateReservationStatus( reservation );
+        validatePaymentStatus( user, reservation );
     }
 
-    private void validateUser(User user, Reservation reservation) {
-        reservation.authorizeUser(user);
+    private void validateUser( User user, Reservation reservation ) {
+        reservation.authorizeUser( user );
     }
 
-    private void validateReservationStatus(Reservation reservation) {
-        if (!reservation.isPayable()) {
-            throw new PaymentException(NOT_PAYABLE);
+    private void validateReservationStatus( Reservation reservation ) {
+        if ( !reservation.isPayable() ) {
+            throw new PaymentException( NOT_PAYABLE );
         }
     }
 
-    private void validatePaymentStatus(User user, Reservation reservation) {
-        paymentRepository.findByUserAndReservation(user, reservation)
+    private void validatePaymentStatus( User user, Reservation reservation ) {
+        paymentRepository.findByUserAndReservation( user, reservation )
                 .ifPresent((payment -> {
-                    if (payment.getPaymentStatus().equals(PaymentStatus.PAYED)) {
-                        throw new PaymentException(NOT_PAYABLE);
+                    if ( payment.getPaymentStatus().equals( PaymentStatus.PAYED ) ) {
+                        throw new PaymentException( NOT_PAYABLE );
                     }
                 }));
     }

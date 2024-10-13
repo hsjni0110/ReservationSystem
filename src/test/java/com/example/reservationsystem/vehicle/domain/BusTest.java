@@ -1,6 +1,5 @@
-package com.example.reservationsystem.vehicle;
+package com.example.reservationsystem.vehicle.domain;
 
-import com.example.reservationsystem.vehicle.domain.Bus;
 import org.junit.jupiter.api.Test;
 
 public class BusTest {

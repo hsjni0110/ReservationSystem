@@ -1,4 +1,4 @@
-package com.example.reservationsystem.user;
+package com.example.reservationsystem.user.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.user.signin.application.SignInService;

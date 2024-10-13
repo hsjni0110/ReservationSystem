@@ -1,0 +1,24 @@
+package com.example.reservationsystem.account.domain;
+
+import com.example.reservationsystem.account.domain.repository.AccountRepository;
+import com.example.reservationsystem.account.exception.AccountException;
+import com.example.reservationsystem.user.signup.domain.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import static com.example.reservationsystem.account.exception.AccountExceptionType.ACCOUNT_NOT_FOUND;
+
+@Component
+@RequiredArgsConstructor
+public class BalanceManager {
+
+    private final AccountRepository accountRepository;
+
+    public Money recharge( User user, long amount ) {
+
+        Account account = accountRepository.findByUser( user ).orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+        return account.recharge(Money.wons(amount));
+
+    }
+
+}

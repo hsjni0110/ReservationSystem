@@ -5,6 +5,8 @@ import com.example.reservationsystem.payment.exception.PaymentException;
 import com.example.reservationsystem.payment.infra.MoneyConverter;
 import com.example.reservationsystem.user.signup.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,8 @@ import static com.example.reservationsystem.payment.exception.PaymentExceptionTy
 @Entity
 @Table(name = "ACCOUNT")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Account extends BaseEntity {
 
     @Id
@@ -25,6 +29,7 @@ public class Account extends BaseEntity {
 
     @Getter
     @Convert(converter = MoneyConverter.class)
+    @Builder.Default
     private Money amount = Money.ZERO;
 
     public Account(User user) {
@@ -36,6 +41,11 @@ public class Account extends BaseEntity {
             throw new PaymentException(AMOUNT_IS_NOT_SUFFICIENT);
         }
         this.amount = this.amount.subtract(amount);
+    }
+
+    public Money recharge(Money chargeAmount) {
+        this.amount = this.amount.add(chargeAmount);
+        return this.amount;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.reservationsystem.user;
+package com.example.reservationsystem.user.domain;
 
 import com.example.reservationsystem.common.DomainTest;
 import com.example.reservationsystem.user.signin.domain.JwtProvider;

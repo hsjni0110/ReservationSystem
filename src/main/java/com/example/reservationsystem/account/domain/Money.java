@@ -1,13 +1,20 @@
 package com.example.reservationsystem.account.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@NoArgsConstructor
+@Builder
 public class Money {
 
     public static final Money ZERO = Money.wons(0);
 
-    private final BigDecimal amount;
+    @Builder.Default
+    private BigDecimal amount = BigDecimal.ZERO;
 
     public Money(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {

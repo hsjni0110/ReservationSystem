@@ -13,6 +13,14 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
+    
+    ACCOUNT {
+        int account_id PK
+        int user_id FK
+        bigdecimal amount
+        datetime created_at
+        datetime updated_at
+    }
 
     RESERVATION {
         int reservation_id PK
@@ -75,20 +83,9 @@ erDiagram
         int payment_id PK
         int reservation_id FK
         decimal amount
-        int payment_status_id FK
-        int payment_method_id FK
+        string payment_status
         datetime created_at
         datetime updated_at
-    }
-
-    PAYMENT_STATUS {
-        int payment_status_id PK
-        string status_name
-    }
-
-    PAYMENT_METHOD {
-        int payment_method_id PK
-        string method_name
     }
 
     NOTIFICATION {
@@ -105,10 +102,9 @@ erDiagram
     }
 
     USER ||--o{ RESERVATION : "has"
+    USER ||--|| ACCOUNT : "has"
     RESERVATION ||--|| PAYMENT : "generates"
     RESERVATION ||--o{ SCHEDULED_SEAT : "reserves"
-    PAYMENT ||--|| PAYMENT_STATUS : "has status"
-    PAYMENT ||--|| PAYMENT_METHOD : "uses"
     USER ||--o{ NOTIFICATION : "receives"
     NOTIFICATION ||--|| NOTIFICATION_TYPE : "of type"
     BUS ||--o{ SEAT : "contains"
