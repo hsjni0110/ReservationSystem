@@ -24,7 +24,7 @@ public class PaymentManager {
 
     public Payment executePayment( User user, Reservation reservation ) {
         try {
-            Account account = accountRepository.findByUser( user ).orElseThrow(() -> new AccountException( ACCOUNT_NOT_FOUND ));
+            Account account = accountRepository.findByUserForUpdate( user ).orElseThrow(() -> new AccountException( ACCOUNT_NOT_FOUND ));
             Money totalPrice = reservation.getScheduledSeats()
                     .stream()
                     .map( ScheduledSeat::getSeatPrice )

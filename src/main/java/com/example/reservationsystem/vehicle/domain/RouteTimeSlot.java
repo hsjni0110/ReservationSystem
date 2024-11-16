@@ -14,6 +14,7 @@ public class RouteTimeSlot {
     private Long routeTimeSlotId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "route_id")
     private Route route;
 
     @Getter

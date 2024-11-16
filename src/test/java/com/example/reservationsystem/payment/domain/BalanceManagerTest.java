@@ -38,7 +38,7 @@ public class BalanceManagerTest extends DomainTest {
         Long amount = 10000L;
         User 유저 = 유저();
         Account 만원_통장 = 만원_통장();
-        given(accountRepository.findByUser(any(User.class))).willReturn(Optional.of(만원_통장));
+        given(accountRepository.findByUserForUpdate(any(User.class))).willReturn(Optional.of(만원_통장));
 
         // when
         Money totalAmount = balanceManager.recharge( 유저, amount );

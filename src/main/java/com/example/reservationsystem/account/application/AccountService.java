@@ -1,5 +1,6 @@
 package com.example.reservationsystem.account.application;
 
+import com.example.reservationsystem.account.domain.BalanceLockManager;
 import com.example.reservationsystem.account.domain.BalanceManager;
 import com.example.reservationsystem.account.domain.Money;
 import com.example.reservationsystem.account.dto.BalanceResponse;
@@ -8,7 +9,6 @@ import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.reservationsystem.account.exception.AccountExceptionType.INVALID_RECHARGED_PRICE;
 
@@ -16,15 +16,16 @@ import static com.example.reservationsystem.account.exception.AccountExceptionTy
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final UserRepository userRepository;
-    private final BalanceManager balanceManager;
+    private final BalanceLockManager balanceLockManager;
 
-    @Transactional
     public BalanceResponse recharge( long userId, long amount ) {
-        User user = userRepository.getByIdOrThrow( userId );
         validate( amount );
-        Money recharged = balanceManager.recharge( user, amount );
-        return new BalanceResponse( recharged.getAmount().longValue() );
+        try {
+            Money recharged = balanceLockManager.rechargeWithLock( userId, amount );
+            return new BalanceResponse( recharged.getAmount().longValue() );
+        } catch (Exception e) {
+            throw new AccountException( INVALID_RECHARGED_PRICE );
+        }
     }
 
     private void validate( long amount ) {

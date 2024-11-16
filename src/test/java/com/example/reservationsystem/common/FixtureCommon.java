@@ -11,13 +11,7 @@ import java.util.Arrays;
 public class FixtureCommon {
 
     public static FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-            .objectIntrospector(new FailoverIntrospector(
-                    Arrays.asList(
-                            FieldReflectionArbitraryIntrospector.INSTANCE,
-                            BeanArbitraryIntrospector.INSTANCE,
-                            BuilderArbitraryIntrospector.INSTANCE
-                    )
-            ))
+            .objectIntrospector(FieldReflectionArbitraryIntrospector.INSTANCE)
             .defaultNotNull(true)
             .build();
 

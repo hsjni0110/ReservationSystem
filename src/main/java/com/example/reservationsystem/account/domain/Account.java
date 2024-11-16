@@ -32,8 +32,19 @@ public class Account extends BaseEntity {
     @Builder.Default
     private Money amount = Money.ZERO;
 
+    @Version
+    private Long version;
+
+    public Account(Long accountId, User user, Money amount) {
+        this.accountId = accountId;
+        this.user = user;
+        this.amount = amount;
+        this.version = 1L;
+    }
+
     public Account(User user) {
         this.user = user;
+        this.version = 1L;
     }
 
     public void pay(Money payPrice) {

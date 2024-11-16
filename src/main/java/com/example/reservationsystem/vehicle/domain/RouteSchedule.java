@@ -3,6 +3,8 @@ package com.example.reservationsystem.vehicle.domain;
 import com.example.reservationsystem.common.domain.BaseEntity;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +22,7 @@ public class RouteSchedule extends BaseEntity {
     @Getter
     private Long routeScheduleId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "route_time_slot")
     private RouteTimeSlot routeTimeSlot;
 

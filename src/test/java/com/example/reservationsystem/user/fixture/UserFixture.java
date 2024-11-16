@@ -11,4 +11,10 @@ public class UserFixture {
                 .sample();
     }
 
+    public static User 유저(Long id) {
+        return fixtureMonkey.giveMeBuilder(User.class)
+                .set("userId", id)
+                .sample();
+    }
+
 }
