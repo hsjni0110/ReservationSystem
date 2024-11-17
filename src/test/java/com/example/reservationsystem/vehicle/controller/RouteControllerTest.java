@@ -5,7 +5,6 @@ import com.example.reservationsystem.vehicle.application.RouteService;
 import com.example.reservationsystem.vehicle.dto.RouteCreateRequest;
 import com.example.reservationsystem.vehicle.dto.RouteScheduleCreateRequest;
 import com.example.reservationsystem.vehicle.dto.RouteScheduleRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleResponse;
 import com.example.reservationsystem.vehicle.presentation.RouteController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;

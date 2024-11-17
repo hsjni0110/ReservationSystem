@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class Reservation extends BaseEntity {
     @JoinColumn
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reservation")
     @Getter
     private List<ScheduledSeat> scheduledSeats = new ArrayList<>();
 
@@ -70,6 +71,10 @@ public class Reservation extends BaseEntity {
 
     public void successPayment() {
         this.status = ReservationStatus.RESERVED;
+    }
+
+    public void cancelReservation() {
+        this.scheduledSeats.forEach( ScheduledSeat::cancelSeatReservation );
     }
 
 }

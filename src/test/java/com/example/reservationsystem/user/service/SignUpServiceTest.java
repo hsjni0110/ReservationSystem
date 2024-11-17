@@ -1,5 +1,6 @@
 package com.example.reservationsystem.user.service;
 
+import com.example.reservationsystem.account.domain.repository.AccountRepository;
 import com.example.reservationsystem.common.ServiceTest;
 import com.example.reservationsystem.user.signup.application.SignUpService;
 import com.example.reservationsystem.user.signup.domain.User;
@@ -19,6 +20,9 @@ public class SignUpServiceTest extends ServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AccountRepository accountRepository;
 
     @InjectMocks
     private SignUpService signUpService;

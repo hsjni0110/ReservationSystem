@@ -14,6 +14,7 @@ public enum VehicleExceptionType implements BaseExceptionType {
     ROUTE_TIME_SLOT_NOT_FOUND(NOT_FOUND, "Route Time Slot Not Found"),
     DUPLICATE_ROUTE(CONFLICT, "Duplicate Route"),
     DUPLICATE_DISPATCH_TIME(CONFLICT, "Duplicate Dispatch Time"),
+    BUS_CAPACITY_OVERFLOW(CONFLICT, "Bus Capacity Overflow"),
     ;
 
     private final HttpStatus httpStatus;

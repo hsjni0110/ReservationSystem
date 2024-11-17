@@ -23,7 +23,7 @@ public class ReservationController {
     public ResponseEntity<List<ScheduledSeatResponse>> getAvailableSeats(
             @RequestBody AvailableSeatRequest request
     ) {
-        List<ScheduledSeatResponse> scheduledSeats = reservationService.getSeatsByRoute(request.departure(), request.arrival(), request.specificDate(), request.timeSlot());
+        List<ScheduledSeatResponse> scheduledSeats = reservationService.getSeatsByRoute(request.routeScheduleId());
         return ResponseEntity.ok(scheduledSeats);
     }
 

@@ -31,7 +31,7 @@ public class ScheduledSeatTest extends DomainTest {
         ScheduledSeat scheduledSeat1 = new ScheduledSeat(seatId, routeSchedule, true, 10000);
 
         // then
-        ReservationException reservationException = assertThrows(ReservationException.class, scheduledSeat1::isReserved);
+        ReservationException reservationException = assertThrows(ReservationException.class, scheduledSeat1::reserveSeat);
         assertEquals(ReservationExceptionType.ALREADY_PRESERVED_SEAT, reservationException.exceptionType());
     }
 

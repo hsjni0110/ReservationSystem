@@ -20,8 +20,8 @@ public class ReservationLockManager {
             waitTime = 5,
             releaseTime = 10
     )
-    public Reservation preserveWithLock( Long userId, List<Long> scheduleSeatIds ) {
-        return reservationManager.preserve( userId, scheduleSeatIds );
+    public Reservation preserveWithLock(Long userId, Long routeScheduleId, List<Long> scheduleSeatIds ) {
+        return reservationManager.preserve( userId, routeScheduleId, scheduleSeatIds );
     }
 
 }

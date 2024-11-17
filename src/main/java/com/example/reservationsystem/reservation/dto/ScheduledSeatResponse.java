@@ -1,8 +1,16 @@
 package com.example.reservationsystem.reservation.dto;
 
-public record ScheduledSeatResponse(
-        Long scheduledSeatId,
-        Integer seatId,
-        boolean isReserved
-) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class ScheduledSeatResponse {
+
+    private Long scheduleSeatId;
+    private Integer seatId;
+    private boolean isReserved;
+
 }

@@ -3,11 +3,15 @@ package com.example.reservationsystem.reservation.domain;
 import com.example.reservationsystem.common.domain.BaseEntity;
 import com.example.reservationsystem.account.domain.Money;
 import com.example.reservationsystem.payment.infra.MoneyConverter;
+import com.example.reservationsystem.reservation.exception.ReservationException;
 import com.example.reservationsystem.vehicle.domain.RouteSchedule;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static com.example.reservationsystem.reservation.exception.ReservationExceptionType.ALREADY_PRESERVED_SEAT;
+import static com.example.reservationsystem.reservation.exception.ReservationExceptionType.NOT_PRESERVED_SEAT;
 
 @Entity
 @Table(name = "SCHEDULED_SEAT")
@@ -47,12 +51,22 @@ public class ScheduledSeat extends BaseEntity {
         return new ScheduledSeat(seatId, routeSchedule, false, seatPrice);
     }
 
-    public Boolean isReserved() {
-        return this.isReserved;
+    public void reserveSeat() {
+        if (this.isReserved) {
+            throw new ReservationException( ALREADY_PRESERVED_SEAT );
+        }
+
+        this.isReserved = true;
+        routeSchedule.decreaseSeat();
     }
 
-    public void updateStatus(boolean status) {
-        this.isReserved = status;
+    public void cancelSeatReservation() {
+        if (!this.isReserved) {
+            throw new ReservationException(NOT_PRESERVED_SEAT);
+        }
+
+        this.isReserved = false;
+        routeSchedule.increaseSeat();
     }
 
 }

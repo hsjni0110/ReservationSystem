@@ -3,7 +3,6 @@ package com.example.reservationsystem.reservation;
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.reservation.application.ReservationService;
 import com.example.reservationsystem.reservation.dto.AvailableSeatRequest;
-import com.example.reservationsystem.reservation.dto.ScheduledSeatResponse;
 import com.example.reservationsystem.reservation.dto.SeatReservationRequest;
 import com.example.reservationsystem.reservation.dto.SeatReservationResponse;
 import com.example.reservationsystem.reservation.presentation.ReservationController;
@@ -12,13 +11,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -48,13 +45,9 @@ public class ReservationControllerTest extends ControllerTest {
     @Test
     void 예약_가능한_좌석을_조회할_수_있다() throws Exception {
         // given
-        LocalDate specificDate = LocalDate.of(2024, 10, 10);
-        String departure = "대전복합터미널";
-        String arrival = "센트럴시티";
-        String timeSlot = "10:00";
-        AvailableSeatRequest availableSeatRequest = new AvailableSeatRequest(specificDate, departure, arrival, timeSlot);
+        AvailableSeatRequest availableSeatRequest = new AvailableSeatRequest(1L);
         ScheduledSeatResponse scheduledSeatResponse = new ScheduledSeatResponse(1L, 10, false);
-        given(reservationService.getSeatsByRoute(departure, arrival, specificDate, timeSlot)).willReturn(List.of(scheduledSeatResponse));
+        given(reservationService.getSeatsByRoute(availableSeatRequest.routeScheduleId())).willReturn(List.of(scheduledSeatResponse));
 
         // when, then
         mockMvc.perform(get("/reservation/seats")

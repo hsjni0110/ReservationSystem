@@ -1,5 +1,6 @@
 package com.example.reservationsystem.vehicle.application;
 
+import com.example.reservationsystem.common.config.CacheConfig;
 import com.example.reservationsystem.vehicle.domain.Bus;
 import com.example.reservationsystem.vehicle.domain.Route;
 import com.example.reservationsystem.vehicle.domain.RouteSchedule;
@@ -9,6 +10,7 @@ import com.example.reservationsystem.vehicle.domain.repository.RouteScheduleRepo
 import com.example.reservationsystem.vehicle.dto.RouteScheduleResponse;
 import com.example.reservationsystem.vehicle.exception.VehicleException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +52,12 @@ public class RouteService {
         routeScheduleRepository.save(routeSchedule);
     }
 
-    @Transactional(readOnly = true)
+    @Cacheable(
+            cacheNames = CacheConfig.FIVE_MIN_CACHE,
+            key = "'available-route-schedule'",
+            condition = "#departure != null && #arrival != null && #scheduleDate != null",
+            sync = true
+    )
     public List<RouteScheduleResponse> getAvailableRouteSchedules(String departure, String arrival, LocalDate scheduleDate) {
         Route route = routeRepository.findByDepartureAndArrivalAndScheduleDate(departure, arrival, scheduleDate).orElseThrow(() -> new VehicleException(ROUTE_NOT_FOUND));
         List<RouteSchedule> routeSchedules = routeScheduleRepository.findByRouteTimeSlotIn(route.getRouteTimeSlots());

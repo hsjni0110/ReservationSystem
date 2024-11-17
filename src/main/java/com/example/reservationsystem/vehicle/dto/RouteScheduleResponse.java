@@ -1,8 +1,16 @@
 package com.example.reservationsystem.vehicle.dto;
 
-public record RouteScheduleResponse(
-        Long routeScheduleId,
-        Long busId,
-        String timeSlot
-) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+public class RouteScheduleResponse {
+
+    private Long routeScheduleId;
+    private Long busId;
+    private String timeSlot;
+
 }
