@@ -12,8 +12,8 @@ import java.util.List;
 import static com.example.reservationsystem.vehicle.exception.VehicleExceptionType.ROUTE_TIME_SLOT_NOT_FOUND;
 
 @Entity
-@Table(name = "ROUTE")
 @NoArgsConstructor
+@Table(name = "ROUTE", indexes = {@Index(name = "idx_route", columnList = "departure, arrival, schedule_date")})
 public class Route {
 
     @Id
