@@ -3,6 +3,7 @@ package com.example.reservationsystem.reservation;
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.reservation.application.ReservationService;
 import com.example.reservationsystem.reservation.dto.AvailableSeatRequest;
+import com.example.reservationsystem.reservation.dto.ScheduledSeatResponse;
 import com.example.reservationsystem.reservation.dto.SeatReservationRequest;
 import com.example.reservationsystem.reservation.dto.SeatReservationResponse;
 import com.example.reservationsystem.reservation.presentation.ReservationController;
@@ -55,8 +56,8 @@ public class ReservationControllerTest extends ControllerTest {
                         .content(objectMapper.writeValueAsString(availableSeatRequest))
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].scheduledSeatId").value(scheduledSeatResponse.scheduledSeatId()))
-                .andExpect(jsonPath("$[0].seatId").value(scheduledSeatResponse.seatId()))
+                .andExpect(jsonPath("$[0].scheduledSeatId").value(scheduledSeatResponse.getScheduleSeatId()))
+                .andExpect(jsonPath("$[0].seatId").value(scheduledSeatResponse.getSeatId()))
                 .andExpect(jsonPath("$[0].isReserved").value(scheduledSeatResponse.isReserved()));
     }
 

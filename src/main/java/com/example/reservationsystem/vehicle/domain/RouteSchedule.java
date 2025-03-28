@@ -3,7 +3,6 @@ package com.example.reservationsystem.vehicle.domain;
 import com.example.reservationsystem.common.domain.BaseEntity;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;
 import com.example.reservationsystem.vehicle.exception.VehicleException;
-import com.example.reservationsystem.vehicle.exception.VehicleExceptionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

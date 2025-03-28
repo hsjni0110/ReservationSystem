@@ -5,6 +5,7 @@ import com.example.reservationsystem.vehicle.application.RouteService;
 import com.example.reservationsystem.vehicle.dto.RouteCreateRequest;
 import com.example.reservationsystem.vehicle.dto.RouteScheduleCreateRequest;
 import com.example.reservationsystem.vehicle.dto.RouteScheduleRequest;
+import com.example.reservationsystem.vehicle.dto.RouteScheduleResponse;
 import com.example.reservationsystem.vehicle.presentation.RouteController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,7 +54,7 @@ public class RouteControllerTest extends ControllerTest {
                         new RouteCreateRequest.TimeSlot("19:00")
                 )
         );
-        willDoNothing().given(routeService).createRoute(any(String.class), any(String.class), any(LocalDate.class), any(List.class));
+        willReturn(1L).given(routeService).createRoute(any(String.class), any(String.class), any(LocalDate.class), any(List.class));
 
         // when, then
         mockMvc.perform(post("/route")

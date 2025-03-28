@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,7 +35,7 @@ public class BusControllerTest extends ControllerTest {
     @Test
     void 버스를_생성할_수_있다() throws Exception{
         // given
-        willDoNothing().given(busService).createBus(any(String.class), any(String.class), any(Integer.class));
+        willReturn(1L).given(busService).createBus(any(String.class), any(String.class), any(Integer.class));
         BusCreateRequest busCreateRequest = new BusCreateRequest("강남고속", "123", 30);
 
         // when, then

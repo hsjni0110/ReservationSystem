@@ -13,9 +13,10 @@ public class BusService {
     private final BusRepository busRepository;
 
     @Transactional
-    public void createBus(String busName, String busNumber, int capacity) {
+    public Long createBus(String busName, String busNumber, int capacity) {
         Bus bus = Bus.create(busName, busNumber, capacity);
-        busRepository.save(bus);
+        Bus saved = busRepository.save(bus);
+        return saved.getBusId();
     }
 
 }

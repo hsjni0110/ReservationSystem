@@ -18,12 +18,17 @@ public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long routeId;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     private List<RouteTimeSlot> routeTimeSlots = new ArrayList<>();
+
+    @Column(length = 50)
     private String departure;
+
+    @Column(length = 50)
     private String arrival;
 
     @Getter

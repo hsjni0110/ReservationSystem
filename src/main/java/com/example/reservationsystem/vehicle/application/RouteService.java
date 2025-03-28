@@ -30,13 +30,13 @@ public class RouteService {
     private final BusRepository busRepository;
 
     @Transactional
-    public void createRoute(String departure, String arrival, LocalDate scheduleDate, List<String> times) {
+    public Long createRoute(String departure, String arrival, LocalDate scheduleDate, List<String> times) {
         routeRepository.findByDepartureAndArrivalAndScheduleDate(departure, arrival, scheduleDate)
                 .ifPresent(route -> {
                     throw new VehicleException(DUPLICATE_ROUTE);
                 });
         Route route = Route.create(departure, arrival, scheduleDate, times);
-        routeRepository.save(route);
+        return routeRepository.save(route).getRouteId();
     }
 
     @Transactional

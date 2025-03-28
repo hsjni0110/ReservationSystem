@@ -36,7 +36,7 @@ public class ReservationService {
             condition = "#routeScheduleId != null",
             sync = true
     )
-    public List<ScheduledSeatResponse> getSeatsByRoute(Long routeScheduleId ) {
+    public List<ScheduledSeatResponse> getSeatsByRoute( Long routeScheduleId ) {
         RouteSchedule routeSchedule = routeScheduleRepository.findById( routeScheduleId )
                 .orElseThrow(() -> new ReservationException(ROUTE_SCHEDULE_NOT_FOUND));
         List<ScheduledSeat> scheduledSeats = scheduledSeatRepository.findByRouteSchedule( routeSchedule );

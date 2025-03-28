@@ -1,11 +1,9 @@
 package com.example.reservationsystem.vehicle.presentation;
 
 import com.example.reservationsystem.vehicle.application.RouteService;
-import com.example.reservationsystem.vehicle.dto.RouteCreateRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleCreateRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleResponse;
+import com.example.reservationsystem.vehicle.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,11 +21,19 @@ public class RouteController {
     private final RouteService routeService;
 
     @PostMapping
-    public ResponseEntity<Void> createRoute(
+    public ResponseEntity<RouteCreateResponse> createRoute(
             @RequestBody RouteCreateRequest request
     ) {
-        routeService.createRoute(request.departure(), request.arrival(), request.scheduleDate(), request.timeSlots().stream().map(RouteCreateRequest.TimeSlot::time).toList());
-        return ResponseEntity.created(URI.create("/route/" + request.departure() + "/" + request.arrival())).build();
+        Long routeId = routeService.createRoute(
+                request.departure(),
+                request.arrival(),
+                request.scheduleDate(),
+                request.timeSlots().stream().map(RouteCreateRequest.TimeSlot::time).toList()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new RouteCreateResponse(routeId));
     }
 
     @PostMapping("/dispatch/bus")
