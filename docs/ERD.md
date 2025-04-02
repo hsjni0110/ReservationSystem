@@ -21,6 +21,20 @@ erDiagram
         datetime created_at
         datetime updated_at
     }
+    
+    POINT {
+        int point_id PK
+        int user_id FK
+        int total_point
+    }
+    
+    POINT_HISTORY {
+        int point_history_id PK
+        int user_id FK
+        int amount
+        string source
+        datetime created_at
+    }
 
     RESERVATION {
         int reservation_id PK
