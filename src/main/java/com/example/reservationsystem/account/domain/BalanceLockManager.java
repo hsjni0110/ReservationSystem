@@ -1,6 +1,7 @@
 package com.example.reservationsystem.account.domain;
 
 import com.example.reservationsystem.common.annotation.DistributedSimpleLock;
+import com.example.reservationsystem.common.domain.Money;
 import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class BalanceLockManager {
             waitTime = 5,
             releaseTime = 10
     )
-    public Money rechargeWithLock( Long userId, Long amount ) {
+    public Money rechargeWithLock(Long userId, Long amount ) {
 
         User user = userRepository.getByIdOrThrow( userId );
         return balanceManager.recharge( user, amount );

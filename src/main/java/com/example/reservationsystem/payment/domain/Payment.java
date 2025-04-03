@@ -1,11 +1,10 @@
 package com.example.reservationsystem.payment.domain;
 
-import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.common.domain.Money;
 import com.example.reservationsystem.common.domain.BaseEntity;
 import com.example.reservationsystem.common.type.PaymentStatus;
 import com.example.reservationsystem.payment.infra.MoneyConverter;
 import com.example.reservationsystem.reservation.domain.Reservation;
-import com.example.reservationsystem.reservation.domain.ScheduledSeat;
 import com.example.reservationsystem.user.signup.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;

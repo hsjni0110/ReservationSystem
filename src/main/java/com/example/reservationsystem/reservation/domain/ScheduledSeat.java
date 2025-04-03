@@ -1,7 +1,7 @@
 package com.example.reservationsystem.reservation.domain;
 
 import com.example.reservationsystem.common.domain.BaseEntity;
-import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.common.domain.Money;
 import com.example.reservationsystem.payment.infra.MoneyConverter;
 import com.example.reservationsystem.reservation.exception.ReservationException;
 import com.example.reservationsystem.vehicle.domain.RouteSchedule;

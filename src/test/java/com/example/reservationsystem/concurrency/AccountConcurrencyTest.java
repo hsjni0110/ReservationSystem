@@ -2,7 +2,7 @@ package com.example.reservationsystem.concurrency;
 
 import com.example.reservationsystem.account.application.AccountService;
 import com.example.reservationsystem.account.domain.Account;
-import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.common.domain.Money;
 import com.example.reservationsystem.account.domain.repository.AccountRepository;
 import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;

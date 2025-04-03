@@ -1,9 +1,8 @@
 package com.example.reservationsystem.payment.domain.manager;
 
 import com.example.reservationsystem.account.domain.Account;
-import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.common.domain.Money;
 import com.example.reservationsystem.account.exception.AccountException;
-import com.example.reservationsystem.common.type.PaymentStatus;
 import com.example.reservationsystem.payment.domain.Payment;
 import com.example.reservationsystem.account.domain.repository.AccountRepository;
 import com.example.reservationsystem.payment.domain.repository.PaymentRepository;

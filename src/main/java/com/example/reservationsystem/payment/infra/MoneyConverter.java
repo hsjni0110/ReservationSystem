@@ -1,6 +1,6 @@
 package com.example.reservationsystem.payment.infra;
 
-import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.common.domain.Money;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

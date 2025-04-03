@@ -1,6 +1,5 @@
-package com.example.reservationsystem.account.domain;
+package com.example.reservationsystem.common.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -39,8 +38,19 @@ public class Money {
         return new Money(this.amount.subtract(other.amount));
     }
 
+    public Money multiply(double factor) {
+        if (factor < 0) {
+            throw new IllegalArgumentException("Factor cannot be negative");
+        }
+        return new Money(this.amount.multiply(BigDecimal.valueOf(factor)));
+    }
+
     public boolean isLessThan(Money other) {
         return amount.compareTo(other.amount) < 0;
+    }
+
+    public boolean isPositive() {
+        return amount.compareTo(BigDecimal.ZERO) > 0;
     }
 
     public BigDecimal getAmount() {

@@ -1,7 +1,7 @@
 package com.example.reservationsystem.payment.fixture;
 
 import com.example.reservationsystem.account.domain.Account;
-import com.example.reservationsystem.account.domain.Money;
+import com.example.reservationsystem.common.domain.Money;
 
 import static com.example.reservationsystem.common.FixtureCommon.fixtureMonkey;
 
