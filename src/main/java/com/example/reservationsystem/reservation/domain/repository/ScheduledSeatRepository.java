@@ -15,8 +15,8 @@ public interface ScheduledSeatRepository extends JpaRepository<ScheduledSeat, Lo
     List<ScheduledSeat> findByRouteSchedule(RouteSchedule routeSchedule);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select s from ScheduledSeat s where s.seatId = :id")
-    ScheduledSeat findByIdWithPessimisticLock(Long id);
+    @Query("select s from ScheduledSeat s where s.seatId = :id and s.routeSchedule.routeScheduleId = :routeScheduleId")
+    ScheduledSeat findByIdWithPessimisticLock( Long id, Long routeScheduleId );
 
     default ScheduledSeat getByIdOrThrow(Long id) {
         return findById(id).orElseThrow(() -> new RuntimeException("Scheduled Seat with id " + id + " not found"));

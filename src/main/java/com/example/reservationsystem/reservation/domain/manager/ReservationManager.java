@@ -38,7 +38,7 @@ public class ReservationManager {
         User user = userRepository.getByIdOrThrow( userId );
 
         List<ScheduledSeat> scheduledSeats = scheduleSeatIds.stream()
-                .map( scheduledSeatRepository::findByIdWithPessimisticLock )
+                .map( scheduleSeatId -> scheduledSeatRepository.findByIdWithPessimisticLock( scheduleSeatId, routeScheduleId ))
                 .toList();
 
         scheduledSeats.forEach(
@@ -46,7 +46,7 @@ public class ReservationManager {
         );
 
         Reservation reservation = Reservation.from( user, scheduledSeats );
-        evictCacheFromRouteSchedule(routeScheduleId);
+        evictCacheFromRouteSchedule( routeScheduleId );
         return reservationRepository.save( reservation );
     }
 

@@ -32,6 +32,7 @@ public class PointService {
         point.addPoints(earnedPoints);
 
         PointHistory history = PointHistory.earn(userId, transactionId, earnedPoints);
+        pointRepository.save(point);
         pointHistoryRepository.save(history);
     }
 

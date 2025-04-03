@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @Builder
-public class Money {
+public class Money implements Comparable<Money> {
 
     public static final Money ZERO = Money.wons(0);
 
@@ -55,6 +55,11 @@ public class Money {
 
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    @Override
+    public int compareTo(Money other) {
+        return this.amount.compareTo(other.amount);
     }
 
     @Override

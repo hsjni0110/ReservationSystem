@@ -8,11 +8,14 @@ import com.example.reservationsystem.payment.dto.PaymentResponse;
 import com.example.reservationsystem.payment.exception.PaymentException;
 import com.example.reservationsystem.reservation.domain.Reservation;
 import com.example.reservationsystem.reservation.domain.repository.ReservationRepository;
+import com.example.reservationsystem.user.point.application.PointService;
 import com.example.reservationsystem.user.signup.domain.User;
 import com.example.reservationsystem.user.signup.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static com.example.reservationsystem.payment.exception.PaymentExceptionType.NOT_PAYABLE;
 
@@ -24,6 +27,7 @@ public class PaymentService {
     private final ReservationRepository reservationRepository;
     private final PaymentManager paymentManager;
     private final PaymentRepository paymentRepository;
+    private final PointService pointService;
 
     @Transactional
     public PaymentResponse pay( Long userId, Long reservationId ) {
@@ -32,6 +36,7 @@ public class PaymentService {
         validate( user, reservation );
         Payment payment = paymentManager.executePayment( user, reservation );
         reservation.successPayment();
+        pointService.earnPoints( userId, payment.getTotalPrice(), UUID.randomUUID().toString() );
         return new PaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getAmount(), payment.getPaymentStatus(), payment.getCreatedAt() );
     }
 
