@@ -39,10 +39,18 @@ public class OutboxMessage {
     @Column( name = "event_status", nullable = false)
     private EventStatus eventStatus;
 
-    @Column( name = "created_at", nullable = false, updatable = false )
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column( name = "event_date", nullable = false, updatable = false )
+    private LocalDateTime eventDate;
 
     @Column( name = "retry_count", nullable = false )
     private int retryCount;
+
+    public void recordSuccess() {
+        this.eventStatus = EventStatus.SEND_FAILURE;
+    }
+
+    public void recordFailure() {
+        this.eventStatus = EventStatus.SEND_FAILURE;
+    }
 
 }

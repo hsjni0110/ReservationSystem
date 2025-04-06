@@ -3,7 +3,6 @@ package com.example.reservationsystem.infrastructure.event;
 import com.example.reservationsystem.common.domain.EventOutboxService;
 import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
-import com.example.reservationsystem.common.type.EventType;
 import com.example.reservationsystem.payment.event.PaymentAttemptEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -22,10 +21,15 @@ public class PaymentEventListener {
                 AggregateType.PAYMENT,
                 paymentAttemptEvent,
                 paymentAttemptEvent.getAggregateId(),
-                EventType.PAYMENT_ATTEMPT,
+                paymentAttemptEvent.getEventType(),
+                paymentAttemptEvent.createdAt(),
                 EventStatus.INIT
         );
     }
 
+    @TransactionalEventListener( phase = TransactionPhase.AFTER_COMMIT )
+    public void sendPaymentAttemptEvent( PaymentAttemptEvent paymentAttemptEvent ) {
+        eventOutboxService.publishEvent( paymentAttemptEvent );
+    }
 
 }
