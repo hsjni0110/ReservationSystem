@@ -19,31 +19,27 @@ import static com.example.reservationsystem.account.exception.AccountExceptionTy
 @Component
 public class PaymentManager {
 
-    private final AccountRepository accountRepository;
     private final PaymentRepository paymentRepository;
     private final EventPublisher eventPublisher;
 
-    public PaymentManager(AccountRepository accountRepository, PaymentRepository paymentRepository, @Qualifier("application") EventPublisher eventPublisher) {
-        this.accountRepository = accountRepository;
+    public PaymentManager( PaymentRepository paymentRepository, @Qualifier("application") EventPublisher eventPublisher ) {
         this.paymentRepository = paymentRepository;
         this.eventPublisher = eventPublisher;
     }
 
-    public Payment executePayment(User user, Reservation reservation ) {
+    public Payment executePayment( User user, Reservation reservation ) {
         try {
-            Account account = accountRepository.findByUserForUpdate( user ).orElseThrow(() -> new AccountException( ACCOUNT_NOT_FOUND ));
             Money totalPrice = reservation.getScheduledSeats()
                     .stream()
                     .map( ScheduledSeat::getSeatPrice )
                     .reduce( Money.ZERO, Money::add );
 
-            Payment payment = Payment.successFrom(user, reservation, totalPrice);
+            Payment payment = Payment.notPaidPayment(user, reservation, totalPrice);
             Payment saved = paymentRepository.save(payment);
 
-            eventPublisher.publishEvent( new PaymentAttemptEvent( saved.getPaymentId(), user.getUserId(), totalPrice.getAmount() ) );
+            eventPublisher.publishEvent( new PaymentAttemptEvent( saved.getPaymentId(), user.getUserId(), totalPrice.getAmount(), reservation.getReservationId() ) );
             return payment;
         } catch (Exception e) {
-            // 실패
             throw new RuntimeException(e);
         }
     }

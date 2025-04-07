@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static com.example.reservationsystem.payment.exception.PaymentExceptionType.NOT_PAYABLE;
+import static com.example.reservationsystem.payment.exception.PaymentExceptionType.USER_NOT_MATCHED;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +38,15 @@ public class PaymentService {
         reservation.successPayment();
         pointService.earnPoints( userId, payment.getTotalPrice(), UUID.randomUUID().toString() );
         return new PaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getAmount(), payment.getPaymentStatus(), payment.getCreatedAt() );
+    }
+
+    public Long successPayment(Long userId, Long reservationId ) {
+        User user = userRepository.getByIdOrThrow( userId );
+        Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
+        Payment payment = paymentRepository.findByUserAndReservation(user, reservation)
+                .orElseThrow(() -> new PaymentException(USER_NOT_MATCHED));
+        payment.completePayment();
+        return payment.getPaymentId();
     }
 
     private void validate( User user, Reservation reservation ) {

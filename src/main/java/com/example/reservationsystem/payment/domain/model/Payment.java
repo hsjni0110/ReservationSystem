@@ -45,8 +45,12 @@ public class Payment extends BaseEntity {
         this.paymentStatus = paymentStatus;
     }
 
-    public static Payment successFrom(User user, Reservation reservation, Money totalPrice) {
-        return new Payment(user, reservation, totalPrice, PaymentStatus.PAYED);
+    public void completePayment() {
+        this.paymentStatus = PaymentStatus.PAYED;
+    }
+
+    public static Payment notPaidPayment(User user, Reservation reservation, Money totalPrice) {
+        return new Payment(user, reservation, totalPrice, PaymentStatus.NOT_PAYED);
     }
 
 }

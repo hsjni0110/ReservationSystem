@@ -22,6 +22,7 @@ public class Account extends BaseEntity {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Getter
     private Long accountId;
 
     @OneToOne

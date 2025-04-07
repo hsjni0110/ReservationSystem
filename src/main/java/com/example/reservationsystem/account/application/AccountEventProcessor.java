@@ -23,9 +23,9 @@ public class AccountEventProcessor {
 
     @Transactional
     public void handlePaymentAttempt( PaymentAttemptEvent event ) {
-        accountService.debit( event.userId(), event.totalPrice().longValue() );
+        Long accountId = accountService.debit(event.userId(), event.totalPrice().longValue());
         eventOutboxService.recordEventSuccess( event );
-        eventPublisher.publishEvent( new AccountDebitedEvent() );
+        eventPublisher.publishEvent( new AccountDebitedEvent( accountId, event.userId(), event.reservationId() ) );
     }
 
     public boolean isDuplicate( PaymentAttemptEvent event ) {

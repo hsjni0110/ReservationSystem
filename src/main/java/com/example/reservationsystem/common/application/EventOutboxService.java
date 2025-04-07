@@ -23,7 +23,7 @@ public class EventOutboxService {
     private final EventPublisher eventPublisher;
     private final EventOutboxRepository eventOutboxRepository;
 
-    public EventOutboxService(@Qualifier("kafka") EventPublisher eventPublisher, EventOutboxRepository eventOutboxRepository) {
+    public EventOutboxService( @Qualifier("kafka") EventPublisher eventPublisher, EventOutboxRepository eventOutboxRepository ) {
         this.eventPublisher = eventPublisher;
         this.eventOutboxRepository = eventOutboxRepository;
     }
@@ -46,8 +46,8 @@ public class EventOutboxService {
         eventPublisher.publishEvent( event );
     }
 
-    public void recordEventSuccess( PaymentAttemptEvent event ) {
-        OutboxMessage outboxMessage = findByEvent(event);
+    public void recordEventSuccess( AggregateEvent event ) {
+        OutboxMessage outboxMessage = findByEvent( event );
         outboxMessage.recordSuccess();
     }
 
@@ -71,8 +71,8 @@ public class EventOutboxService {
         return outboxMessage.isSuccessEvent();
     }
 
-    public void recordEventFailure(PaymentAttemptEvent event) {
-        OutboxMessage outboxMessage = findByEvent(event);
+    public void recordEventFailure( AggregateEvent event) {
+        OutboxMessage outboxMessage = findByEvent( event );
         outboxMessage.recordFailure();
     }
 

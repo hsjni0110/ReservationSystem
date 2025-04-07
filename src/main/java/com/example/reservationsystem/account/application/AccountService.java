@@ -30,9 +30,9 @@ public class AccountService {
         }
     }
 
-    public void debit( long userId, long amount ) {
+    public Long debit(long userId, long amount ) {
         validate( amount );
-        balanceLockManager.depositWithLock(userId, amount);
+        return balanceLockManager.depositWithLock(userId, amount);
     }
 
 }
