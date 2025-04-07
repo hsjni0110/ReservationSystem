@@ -2,8 +2,8 @@ package com.example.reservationsystem.vehicle.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.vehicle.application.BusService;
-import com.example.reservationsystem.vehicle.dto.BusCreateRequest;
-import com.example.reservationsystem.vehicle.presentation.BusController;
+import com.example.reservationsystem.vehicle.application.dto.BusCreateRequest;
+import com.example.reservationsystem.vehicle.presentation.controller.BusController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

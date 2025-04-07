@@ -1,5 +1,6 @@
 package com.example.reservationsystem.vehicle.domain;
 
+import com.example.reservationsystem.vehicle.domain.model.Bus;
 import org.junit.jupiter.api.Test;
 
 public class BusTest {

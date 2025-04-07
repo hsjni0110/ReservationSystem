@@ -1,8 +1,7 @@
 package com.example.reservationsystem.account.application;
 
-import com.example.reservationsystem.account.domain.BalanceLockManager;
-import com.example.reservationsystem.common.domain.Money;
-import com.example.reservationsystem.account.dto.BalanceResponse;
+import com.example.reservationsystem.common.domain.model.Money;
+import com.example.reservationsystem.account.application.dto.BalanceResponse;
 import com.example.reservationsystem.account.exception.AccountException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

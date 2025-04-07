@@ -1,13 +1,12 @@
 package com.example.reservationsystem.reservation.domain;
 
-import com.example.reservationsystem.common.domain.BaseEntity;
+import com.example.reservationsystem.common.domain.model.BaseEntity;
 import com.example.reservationsystem.payment.exception.PaymentException;
-import com.example.reservationsystem.user.signup.domain.User;
+import com.example.reservationsystem.user.signup.domain.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

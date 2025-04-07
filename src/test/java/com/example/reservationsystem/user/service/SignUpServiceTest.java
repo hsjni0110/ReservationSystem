@@ -1,10 +1,10 @@
 package com.example.reservationsystem.user.service;
 
-import com.example.reservationsystem.account.domain.repository.AccountRepository;
+import com.example.reservationsystem.account.infra.repository.AccountRepository;
 import com.example.reservationsystem.common.ServiceTest;
 import com.example.reservationsystem.user.signup.application.SignUpService;
-import com.example.reservationsystem.user.signup.domain.User;
-import com.example.reservationsystem.user.signup.domain.UserRepository;
+import com.example.reservationsystem.user.signup.domain.model.User;
+import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -2,8 +2,8 @@ package com.example.reservationsystem.user.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.user.signup.application.SignUpService;
-import com.example.reservationsystem.user.signup.dto.SignUpRequest;
-import com.example.reservationsystem.user.signup.presentation.SignUpController;
+import com.example.reservationsystem.user.signup.application.dto.SignUpRequest;
+import com.example.reservationsystem.user.signup.presentation.controller.SignUpController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -2,12 +2,12 @@ package com.example.reservationsystem.concurrency;
 
 import com.example.reservationsystem.reservation.application.ReservationService;
 import com.example.reservationsystem.reservation.exception.ReservationException;
-import com.example.reservationsystem.user.signup.domain.UserRepository;
-import com.example.reservationsystem.vehicle.domain.Bus;
-import com.example.reservationsystem.vehicle.domain.RouteSchedule;
-import com.example.reservationsystem.vehicle.domain.RouteTimeSlot;
-import com.example.reservationsystem.vehicle.domain.repository.BusRepository;
-import com.example.reservationsystem.vehicle.domain.repository.RouteScheduleRepository;
+import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
+import com.example.reservationsystem.vehicle.domain.model.Bus;
+import com.example.reservationsystem.vehicle.domain.model.RouteSchedule;
+import com.example.reservationsystem.vehicle.domain.model.RouteTimeSlot;
+import com.example.reservationsystem.vehicle.infra.repository.BusRepository;
+import com.example.reservationsystem.vehicle.infra.repository.RouteScheduleRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

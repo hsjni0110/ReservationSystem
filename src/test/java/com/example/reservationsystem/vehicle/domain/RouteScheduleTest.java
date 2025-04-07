@@ -1,6 +1,10 @@
 package com.example.reservationsystem.vehicle.domain;
 
 import com.example.reservationsystem.common.DomainTest;
+import com.example.reservationsystem.vehicle.domain.model.Bus;
+import com.example.reservationsystem.vehicle.domain.model.Route;
+import com.example.reservationsystem.vehicle.domain.model.RouteSchedule;
+import com.example.reservationsystem.vehicle.domain.model.RouteTimeSlot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -2,11 +2,11 @@ package com.example.reservationsystem.vehicle.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.vehicle.application.RouteService;
-import com.example.reservationsystem.vehicle.dto.RouteCreateRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleCreateRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleRequest;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleResponse;
-import com.example.reservationsystem.vehicle.presentation.RouteController;
+import com.example.reservationsystem.vehicle.application.dto.RouteCreateRequest;
+import com.example.reservationsystem.vehicle.application.dto.RouteScheduleCreateRequest;
+import com.example.reservationsystem.vehicle.application.dto.RouteScheduleRequest;
+import com.example.reservationsystem.vehicle.application.dto.RouteScheduleResponse;
+import com.example.reservationsystem.vehicle.presentation.controller.RouteController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

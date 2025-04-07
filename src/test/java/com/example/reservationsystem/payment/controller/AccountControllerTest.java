@@ -1,9 +1,9 @@
 package com.example.reservationsystem.payment.controller;
 
 import com.example.reservationsystem.account.application.AccountService;
-import com.example.reservationsystem.account.controller.AccountController;
-import com.example.reservationsystem.account.dto.BalanceRequest;
-import com.example.reservationsystem.account.dto.BalanceResponse;
+import com.example.reservationsystem.account.presentation.controller.AccountController;
+import com.example.reservationsystem.account.application.dto.BalanceRequest;
+import com.example.reservationsystem.account.application.dto.BalanceResponse;
 import com.example.reservationsystem.common.ControllerTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

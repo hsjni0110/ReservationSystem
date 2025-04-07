@@ -1,13 +1,13 @@
 package com.example.reservationsystem.vehicle.application;
 
 import com.example.reservationsystem.common.config.CacheConfig;
-import com.example.reservationsystem.vehicle.domain.Bus;
-import com.example.reservationsystem.vehicle.domain.Route;
-import com.example.reservationsystem.vehicle.domain.RouteSchedule;
-import com.example.reservationsystem.vehicle.domain.repository.BusRepository;
-import com.example.reservationsystem.vehicle.domain.repository.RouteRepository;
-import com.example.reservationsystem.vehicle.domain.repository.RouteScheduleRepository;
-import com.example.reservationsystem.vehicle.dto.RouteScheduleResponse;
+import com.example.reservationsystem.vehicle.domain.model.Bus;
+import com.example.reservationsystem.vehicle.domain.model.Route;
+import com.example.reservationsystem.vehicle.domain.model.RouteSchedule;
+import com.example.reservationsystem.vehicle.infra.repository.BusRepository;
+import com.example.reservationsystem.vehicle.infra.repository.RouteRepository;
+import com.example.reservationsystem.vehicle.infra.repository.RouteScheduleRepository;
+import com.example.reservationsystem.vehicle.application.dto.RouteScheduleResponse;
 import com.example.reservationsystem.vehicle.exception.VehicleException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

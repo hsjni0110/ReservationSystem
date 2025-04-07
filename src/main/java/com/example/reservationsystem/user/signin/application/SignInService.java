@@ -1,10 +1,10 @@
 package com.example.reservationsystem.user.signin.application;
 
 import com.example.reservationsystem.user.signin.domain.JwtProvider;
-import com.example.reservationsystem.user.signin.dto.SignInResponse;
+import com.example.reservationsystem.user.signin.application.dto.SignInResponse;
 import com.example.reservationsystem.user.signin.exception.UserAuthException;
-import com.example.reservationsystem.user.signup.domain.User;
-import com.example.reservationsystem.user.signup.domain.UserRepository;
+import com.example.reservationsystem.user.signup.domain.model.User;
+import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

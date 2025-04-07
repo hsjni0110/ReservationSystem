@@ -2,9 +2,9 @@ package com.example.reservationsystem.user.controller;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.user.signin.application.SignInService;
-import com.example.reservationsystem.user.signin.dto.SignInRequest;
-import com.example.reservationsystem.user.signin.dto.SignInResponse;
-import com.example.reservationsystem.user.signin.presentation.SignInController;
+import com.example.reservationsystem.user.signin.application.dto.SignInRequest;
+import com.example.reservationsystem.user.signin.application.dto.SignInResponse;
+import com.example.reservationsystem.user.signin.presentation.controller.SignInController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

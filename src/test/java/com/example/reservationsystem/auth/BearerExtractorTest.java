@@ -1,5 +1,6 @@
 package com.example.reservationsystem.auth;
 
+import com.example.reservationsystem.auth.domain.BearerExtractor;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

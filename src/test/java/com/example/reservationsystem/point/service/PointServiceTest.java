@@ -1,13 +1,13 @@
 package com.example.reservationsystem.point.service;
 
 import com.example.reservationsystem.common.ServiceTest;
-import com.example.reservationsystem.common.domain.Money;
+import com.example.reservationsystem.common.domain.model.Money;
 import com.example.reservationsystem.user.point.application.PointService;
-import com.example.reservationsystem.user.point.domain.Point;
-import com.example.reservationsystem.user.point.domain.PointHistory;
-import com.example.reservationsystem.user.point.domain.PointPolicy;
-import com.example.reservationsystem.user.point.domain.repository.PointHistoryRepository;
-import com.example.reservationsystem.user.point.domain.repository.PointRepository;
+import com.example.reservationsystem.user.point.domain.model.Point;
+import com.example.reservationsystem.user.point.domain.model.PointHistory;
+import com.example.reservationsystem.user.point.domain.model.PointPolicy;
+import com.example.reservationsystem.user.point.infra.repository.PointHistoryRepository;
+import com.example.reservationsystem.user.point.infra.repository.PointRepository;
 import com.example.reservationsystem.user.point.exception.PointException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

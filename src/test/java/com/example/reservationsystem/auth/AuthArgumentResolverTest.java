@@ -1,5 +1,7 @@
 package com.example.reservationsystem.auth;
 
+import com.example.reservationsystem.auth.domain.Auth;
+import com.example.reservationsystem.auth.domain.AuthArgumentResolver;
 import com.example.reservationsystem.common.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

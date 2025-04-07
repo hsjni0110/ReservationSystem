@@ -1,6 +1,6 @@
 package com.example.reservationsystem.common.config;
 
-import com.example.reservationsystem.auth.AuthArgumentResolver;
+import com.example.reservationsystem.auth.domain.AuthArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

@@ -1,11 +1,11 @@
 package com.example.reservationsystem.payment.domain;
 
-import com.example.reservationsystem.account.domain.Account;
-import com.example.reservationsystem.account.domain.BalanceManager;
-import com.example.reservationsystem.common.domain.Money;
-import com.example.reservationsystem.account.domain.repository.AccountRepository;
+import com.example.reservationsystem.account.domain.model.Account;
+import com.example.reservationsystem.account.application.BalanceManager;
+import com.example.reservationsystem.common.domain.model.Money;
+import com.example.reservationsystem.account.infra.repository.AccountRepository;
 import com.example.reservationsystem.common.DomainTest;
-import com.example.reservationsystem.user.signup.domain.User;
+import com.example.reservationsystem.user.signup.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

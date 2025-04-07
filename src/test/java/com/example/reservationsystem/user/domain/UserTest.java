@@ -2,7 +2,7 @@ package com.example.reservationsystem.user.domain;
 
 import com.example.reservationsystem.common.DomainTest;
 import com.example.reservationsystem.user.signin.exception.UserAuthException;
-import com.example.reservationsystem.user.signup.domain.User;
+import com.example.reservationsystem.user.signup.domain.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

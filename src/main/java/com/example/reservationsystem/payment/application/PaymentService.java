@@ -1,16 +1,15 @@
 package com.example.reservationsystem.payment.application;
 
 import com.example.reservationsystem.common.type.PaymentStatus;
-import com.example.reservationsystem.payment.domain.Payment;
-import com.example.reservationsystem.payment.domain.manager.PaymentManager;
-import com.example.reservationsystem.payment.domain.repository.PaymentRepository;
-import com.example.reservationsystem.payment.dto.PaymentResponse;
+import com.example.reservationsystem.payment.domain.model.Payment;
+import com.example.reservationsystem.payment.infra.repository.PaymentRepository;
+import com.example.reservationsystem.payment.application.dto.PaymentResponse;
 import com.example.reservationsystem.payment.exception.PaymentException;
 import com.example.reservationsystem.reservation.domain.Reservation;
-import com.example.reservationsystem.reservation.domain.repository.ReservationRepository;
+import com.example.reservationsystem.reservation.infra.repository.ReservationRepository;
 import com.example.reservationsystem.user.point.application.PointService;
-import com.example.reservationsystem.user.signup.domain.User;
-import com.example.reservationsystem.user.signup.domain.UserRepository;
+import com.example.reservationsystem.user.signup.domain.model.User;
+import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
 package com.example.reservationsystem.reservation.fixture;
 
-import com.example.reservationsystem.vehicle.domain.Bus;
-import com.example.reservationsystem.vehicle.domain.RouteTimeSlot;
+import com.example.reservationsystem.vehicle.domain.model.Bus;
+import com.example.reservationsystem.vehicle.domain.model.RouteTimeSlot;
 import com.navercorp.fixturemonkey.ArbitraryBuilder;
 
 import static com.example.reservationsystem.common.FixtureCommon.fixtureMonkey;

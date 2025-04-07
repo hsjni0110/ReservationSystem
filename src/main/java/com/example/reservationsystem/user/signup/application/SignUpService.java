@@ -1,9 +1,9 @@
 package com.example.reservationsystem.user.signup.application;
 
-import com.example.reservationsystem.account.domain.Account;
-import com.example.reservationsystem.account.domain.repository.AccountRepository;
-import com.example.reservationsystem.user.signup.domain.User;
-import com.example.reservationsystem.user.signup.domain.UserRepository;
+import com.example.reservationsystem.account.domain.model.Account;
+import com.example.reservationsystem.account.infra.repository.AccountRepository;
+import com.example.reservationsystem.user.signup.domain.model.User;
+import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,11 +1,11 @@
 package com.example.reservationsystem.concurrency;
 
 import com.example.reservationsystem.account.application.AccountService;
-import com.example.reservationsystem.account.domain.Account;
-import com.example.reservationsystem.common.domain.Money;
-import com.example.reservationsystem.account.domain.repository.AccountRepository;
-import com.example.reservationsystem.user.signup.domain.User;
-import com.example.reservationsystem.user.signup.domain.UserRepository;
+import com.example.reservationsystem.account.domain.model.Account;
+import com.example.reservationsystem.common.domain.model.Money;
+import com.example.reservationsystem.account.infra.repository.AccountRepository;
+import com.example.reservationsystem.user.signup.domain.model.User;
+import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

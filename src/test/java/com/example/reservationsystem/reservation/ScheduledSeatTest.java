@@ -4,11 +4,10 @@ import com.example.reservationsystem.common.DomainTest;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;
 import com.example.reservationsystem.reservation.exception.ReservationException;
 import com.example.reservationsystem.reservation.exception.ReservationExceptionType;
-import com.example.reservationsystem.vehicle.domain.RouteSchedule;
+import com.example.reservationsystem.vehicle.domain.model.RouteSchedule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 

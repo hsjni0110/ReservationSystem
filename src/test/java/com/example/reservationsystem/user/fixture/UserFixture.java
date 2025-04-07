@@ -1,6 +1,6 @@
 package com.example.reservationsystem.user.fixture;
 
-import com.example.reservationsystem.user.signup.domain.User;
+import com.example.reservationsystem.user.signup.domain.model.User;
 
 import static com.example.reservationsystem.common.FixtureCommon.fixtureMonkey;
 

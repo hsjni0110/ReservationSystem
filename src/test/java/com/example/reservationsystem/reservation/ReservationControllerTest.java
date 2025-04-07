@@ -2,11 +2,11 @@ package com.example.reservationsystem.reservation;
 
 import com.example.reservationsystem.common.ControllerTest;
 import com.example.reservationsystem.reservation.application.ReservationService;
-import com.example.reservationsystem.reservation.dto.AvailableSeatRequest;
-import com.example.reservationsystem.reservation.dto.ScheduledSeatResponse;
-import com.example.reservationsystem.reservation.dto.SeatReservationRequest;
-import com.example.reservationsystem.reservation.dto.SeatReservationResponse;
-import com.example.reservationsystem.reservation.presentation.ReservationController;
+import com.example.reservationsystem.reservation.application.dto.AvailableSeatRequest;
+import com.example.reservationsystem.reservation.application.dto.ScheduledSeatResponse;
+import com.example.reservationsystem.reservation.application.dto.SeatReservationRequest;
+import com.example.reservationsystem.reservation.application.dto.SeatReservationResponse;
+import com.example.reservationsystem.reservation.presentation.controller.ReservationController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

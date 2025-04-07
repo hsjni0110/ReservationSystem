@@ -1,10 +1,10 @@
 package com.example.reservationsystem.reservation.domain;
 
-import com.example.reservationsystem.common.domain.BaseEntity;
-import com.example.reservationsystem.common.domain.Money;
-import com.example.reservationsystem.payment.infra.MoneyConverter;
+import com.example.reservationsystem.common.domain.model.BaseEntity;
+import com.example.reservationsystem.common.domain.model.Money;
+import com.example.reservationsystem.common.converter.MoneyConverter;
 import com.example.reservationsystem.reservation.exception.ReservationException;
-import com.example.reservationsystem.vehicle.domain.RouteSchedule;
+import com.example.reservationsystem.vehicle.domain.model.RouteSchedule;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
