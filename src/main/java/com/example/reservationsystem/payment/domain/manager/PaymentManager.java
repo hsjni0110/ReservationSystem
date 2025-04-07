@@ -33,20 +33,16 @@ public class PaymentManager {
 
     public Payment executePayment(User user, Reservation reservation ) {
         try {
-            // 계좌 차감 로직
             Account account = accountRepository.findByUserForUpdate( user ).orElseThrow(() -> new AccountException( ACCOUNT_NOT_FOUND ));
             Money totalPrice = reservation.getScheduledSeats()
                     .stream()
                     .map( ScheduledSeat::getSeatPrice )
                     .reduce( Money.ZERO, Money::add );
 
-            account.pay( totalPrice );
-
-            // 성공
             Payment payment = Payment.successFrom(user, reservation, totalPrice);
             Payment saved = paymentRepository.save(payment);
 
-            eventPublisher.publishEvent(new PaymentAttemptEvent(saved.getPaymentId(), user.getUserId(), totalPrice.getAmount()));
+            eventPublisher.publishEvent( new PaymentAttemptEvent( saved.getPaymentId(), user.getUserId(), totalPrice.getAmount() ) );
             return payment;
         } catch (Exception e) {
             // 실패

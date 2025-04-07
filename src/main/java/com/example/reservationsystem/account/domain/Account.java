@@ -52,7 +52,7 @@ public class Account extends BaseEntity {
         if (this.amount.isLessThan( payPrice )) {
             throw new PaymentException( AMOUNT_IS_NOT_SUFFICIENT );
         }
-        this.amount = this.amount.subtract( amount );
+        this.amount = this.amount.subtract( payPrice);
     }
 
     public Money recharge( Money chargeAmount ) {
