@@ -6,6 +6,7 @@ import com.example.reservationsystem.common.type.EventType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ public class OutboxMessage {
 
     @Enumerated( EnumType.STRING )
     @Column( name = "event_status", nullable = false)
+    @Getter
     private EventStatus eventStatus;
 
     @Column( name = "event_date", nullable = false, updatable = false )
@@ -46,11 +48,15 @@ public class OutboxMessage {
     private int retryCount;
 
     public void recordSuccess() {
-        this.eventStatus = EventStatus.SEND_FAILURE;
+        this.eventStatus = EventStatus.SEND_SUCCESS;
     }
 
     public void recordFailure() {
         this.eventStatus = EventStatus.SEND_FAILURE;
+    }
+
+    public boolean isSuccessEvent() {
+        return this.eventStatus == EventStatus.SEND_SUCCESS;
     }
 
 }

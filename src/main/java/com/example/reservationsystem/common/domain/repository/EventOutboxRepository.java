@@ -26,4 +26,19 @@ public interface EventOutboxRepository extends JpaRepository<OutboxMessage, Long
             @Param("aggregateId") Long aggregateId
     );
 
+    @Query("""
+    SELECT CASE WHEN COUNT(m) > 0 THEN TRUE ELSE FALSE END
+    FROM OutboxMessage m
+    WHERE m.eventType = :eventType
+      AND m.eventStatus = :eventStatus
+      AND m.eventDate = :eventDate
+      AND m.aggregateId = :aggregateId
+""")
+    boolean existsByEvent(
+            @Param("eventType") EventType eventType,
+            @Param("eventStatus") EventStatus eventStatus,
+            @Param("eventDate") LocalDateTime eventDate,
+            @Param("aggregateId") Long aggregateId
+    );
+
 }

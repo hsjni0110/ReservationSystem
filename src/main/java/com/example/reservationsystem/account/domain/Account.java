@@ -21,7 +21,7 @@ import static com.example.reservationsystem.payment.exception.PaymentExceptionTy
 public class Account extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
     private Long accountId;
 
     @OneToOne
@@ -29,34 +29,34 @@ public class Account extends BaseEntity {
     private User user;
 
     @Getter
-    @Convert(converter = MoneyConverter.class)
+    @Convert( converter = MoneyConverter.class )
     @Builder.Default
     private Money amount = Money.ZERO;
 
     @Version
     private Long version;
 
-    public Account(Long accountId, User user, Money amount) {
+    public Account( Long accountId, User user, Money amount ) {
         this.accountId = accountId;
         this.user = user;
         this.amount = amount;
         this.version = 1L;
     }
 
-    public Account(User user) {
+    public Account( User user ) {
         this.user = user;
         this.version = 1L;
     }
 
-    public void pay(Money payPrice) {
-        if (this.amount.isLessThan(payPrice)) {
-            throw new PaymentException(AMOUNT_IS_NOT_SUFFICIENT);
+    public void deposit( Money payPrice ) {
+        if (this.amount.isLessThan( payPrice )) {
+            throw new PaymentException( AMOUNT_IS_NOT_SUFFICIENT );
         }
-        this.amount = this.amount.subtract(amount);
+        this.amount = this.amount.subtract( amount );
     }
 
-    public Money recharge(Money chargeAmount) {
-        this.amount = this.amount.add(chargeAmount);
+    public Money recharge( Money chargeAmount ) {
+        this.amount = this.amount.add( chargeAmount );
         return this.amount;
     }
 

@@ -20,15 +20,20 @@ public class AccountService {
         try {
             Money recharged = balanceLockManager.rechargeWithLock( userId, amount );
             return new BalanceResponse( recharged.getAmount().longValue() );
-        } catch (Exception e) {
+        } catch ( Exception e ) {
             throw new AccountException( INVALID_RECHARGED_PRICE );
         }
     }
 
     private void validate( long amount ) {
         if ( amount < 0 ) {
-            throw new AccountException(INVALID_RECHARGED_PRICE);
+            throw new AccountException( INVALID_RECHARGED_PRICE );
         }
+    }
+
+    public void debit( long userId, long amount ) {
+        validate( amount );
+        balanceLockManager.depositWithLock(userId, amount);
     }
 
 }

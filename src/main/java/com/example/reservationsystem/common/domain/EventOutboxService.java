@@ -2,7 +2,6 @@ package com.example.reservationsystem.common.domain;
 
 import com.example.reservationsystem.common.domain.repository.EventOutboxRepository;
 import com.example.reservationsystem.common.exception.EventException;
-import com.example.reservationsystem.common.exception.EventExceptionType;
 import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.common.type.EventType;
@@ -45,7 +44,7 @@ public class EventOutboxService {
         eventPublisher.publishEvent( event );
     }
 
-    public void recordEvent( PaymentAttemptEvent event ) {
+    public void recordEventSuccess( PaymentAttemptEvent event ) {
         OutboxMessage outboxMessage = findByEvent(event);
         outboxMessage.recordSuccess();
     }
@@ -57,6 +56,22 @@ public class EventOutboxService {
                 event.getEventDate(),
                 event.getAggregateId()
         ).orElseThrow( () -> new EventException( EVENT_NOT_FOUND ) );
+    }
+
+    public boolean checkDuplicateEvent( AggregateEvent event ) {
+        OutboxMessage outboxMessage = eventOutboxRepository.findByEvent(
+                event.getEventType(),
+                event.getEventStatus(),
+                event.getEventDate(),
+                event.getAggregateId()
+        ).orElseThrow(() -> new EventException(EVENT_NOT_FOUND));
+
+        return outboxMessage.isSuccessEvent();
+    }
+
+    public void recordEventFailure(PaymentAttemptEvent event) {
+        OutboxMessage outboxMessage = findByEvent(event);
+        outboxMessage.recordFailure();
     }
 
 }
