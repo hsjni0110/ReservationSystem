@@ -8,7 +8,6 @@ import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.common.type.EventType;
 import com.example.reservationsystem.common.infra.publisher.EventPublisher;
-import com.example.reservationsystem.payment.domain.event.PaymentAttemptEvent;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +73,7 @@ public class EventOutboxService {
     public void recordEventFailure( AggregateEvent event) {
         OutboxMessage outboxMessage = findByEvent( event );
         outboxMessage.recordFailure();
+        eventOutboxRepository.save( outboxMessage );
     }
 
 }

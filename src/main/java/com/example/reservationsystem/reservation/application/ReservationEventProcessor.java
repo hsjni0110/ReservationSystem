@@ -1,6 +1,7 @@
 package com.example.reservationsystem.reservation.application;
 
 import com.example.reservationsystem.common.application.EventOutboxService;
+import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class ReservationEventProcessor {
         eventOutboxService.recordEventSuccess( event );
     }
 
-    public void markFailure( PaymentSuccessEvent event ) {
+    public void markFailure( AggregateEvent event ) {
         eventOutboxService.recordEventFailure( event );
     }
 

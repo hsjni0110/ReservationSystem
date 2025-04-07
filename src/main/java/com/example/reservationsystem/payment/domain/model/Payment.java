@@ -53,4 +53,8 @@ public class Payment extends BaseEntity {
         return new Payment(user, reservation, totalPrice, PaymentStatus.NOT_PAYED);
     }
 
+    public void cancelPayment() {
+        this.paymentStatus = PaymentStatus.PAY_CANCELED;
+    }
+
 }

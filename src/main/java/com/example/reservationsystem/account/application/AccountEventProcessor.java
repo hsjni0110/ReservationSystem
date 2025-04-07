@@ -2,13 +2,16 @@ package com.example.reservationsystem.account.application;
 
 import com.example.reservationsystem.account.domain.event.AccountDebitedEvent;
 import com.example.reservationsystem.common.application.EventOutboxService;
+import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.infra.publisher.EventPublisher;
 import com.example.reservationsystem.payment.domain.event.PaymentAttemptEvent;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AccountEventProcessor {
 
     private final AccountService accountService;
@@ -32,7 +35,7 @@ public class AccountEventProcessor {
         return eventOutboxService.checkDuplicateEvent( event );
     }
 
-    public void markFailure( PaymentAttemptEvent event ) {
+    public void markFailure( AggregateEvent event ) {
         eventOutboxService.recordEventFailure( event );
     }
 

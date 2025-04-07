@@ -1,7 +1,9 @@
 package com.example.reservationsystem.payment.application;
 
 import com.example.reservationsystem.account.domain.event.AccountDebitedEvent;
+import com.example.reservationsystem.account.domain.event.InsufficientAmountEvent;
 import com.example.reservationsystem.common.application.EventOutboxService;
+import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.infra.publisher.EventPublisher;
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
 import jakarta.transaction.Transactional;
@@ -23,13 +25,18 @@ public class PaymentEventProcessor {
 
     @Transactional
     public void handleAccountDebited( AccountDebitedEvent event ) {
-        Long paymentId = paymentService.successPayment(event.userId(), event.reservationId());
+        Long paymentId = paymentService.successPayment( event.userId(), event.reservationId() );
         eventOutboxService.recordEventSuccess( event );
         eventPublisher.publishEvent( new PaymentSuccessEvent( paymentId, event.userId(), event.reservationId()) );
     }
 
-    public void markFailure( AccountDebitedEvent event ) {
+    public void markFailure( AggregateEvent event ) {
         eventOutboxService.recordEventFailure( event );
+    }
+
+    @Transactional
+    public void handleInsufficientAmount( InsufficientAmountEvent event ) {
+        paymentService.cancelPayment( event.userId(), event.reservationId() );
     }
 
 }

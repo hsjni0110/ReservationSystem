@@ -31,8 +31,7 @@ public class Account extends BaseEntity {
 
     @Getter
     @Convert( converter = MoneyConverter.class )
-    @Builder.Default
-    private Money amount = Money.ZERO;
+    private Money amount;
 
     @Version
     private Long version;
@@ -47,11 +46,17 @@ public class Account extends BaseEntity {
     public Account( User user ) {
         this.user = user;
         this.version = 1L;
+        this.amount = Money.ZERO;
     }
 
     public void deposit( Money payPrice ) {
         if (this.amount.isLessThan( payPrice )) {
-            throw new PaymentException( AMOUNT_IS_NOT_SUFFICIENT );
+            throw new PaymentException(
+                    AMOUNT_IS_NOT_SUFFICIENT,
+                    this.accountId,
+                    this.amount,
+                    payPrice
+            );
         }
         this.amount = this.amount.subtract( payPrice);
     }

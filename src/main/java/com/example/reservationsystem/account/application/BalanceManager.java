@@ -30,7 +30,7 @@ public class BalanceManager {
     }
 
     @Transactional
-    public Long deposit(User user, long amount ) {
+    public Long deposit( User user, long amount ) {
         Account account = accountRepository.findByUserForUpdate( user ).orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
         account.deposit( Money.wons( amount ) );
         return account.getAccountId();

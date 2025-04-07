@@ -4,6 +4,7 @@ public enum PaymentStatus {
 
     NOT_PAYED,
     PAYED,
+    PAY_CANCELED,
     ;
 
 }

@@ -30,7 +30,7 @@ public class AccountService {
         }
     }
 
-    public Long debit(long userId, long amount ) {
+    public Long debit( long userId, long amount ) {
         validate( amount );
         return balanceLockManager.depositWithLock(userId, amount);
     }

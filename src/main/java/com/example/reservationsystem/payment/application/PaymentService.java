@@ -1,6 +1,7 @@
 package com.example.reservationsystem.payment.application;
 
 import com.example.reservationsystem.common.type.PaymentStatus;
+import com.example.reservationsystem.payment.application.dto.PaymentStatusResponse;
 import com.example.reservationsystem.payment.domain.model.Payment;
 import com.example.reservationsystem.payment.infra.repository.PaymentRepository;
 import com.example.reservationsystem.payment.application.dto.PaymentResponse;
@@ -71,6 +72,23 @@ public class PaymentService {
                         throw new PaymentException( NOT_PAYABLE );
                     }
                 }));
+    }
+
+    public void cancelPayment( Long userId, Long reservationId ) {
+        User user = userRepository.getByIdOrThrow( userId );
+        Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
+        Payment payment = paymentRepository.findByUserAndReservation(user, reservation)
+                .orElseThrow(() -> new PaymentException(USER_NOT_MATCHED));
+        payment.cancelPayment();
+        paymentRepository.save( payment );
+    }
+
+    public PaymentStatusResponse getPaymentStatus(Long userId, Long reservationId ) {
+        User user = userRepository.getByIdOrThrow( userId );
+        Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
+        Payment payment = paymentRepository.findByUserAndReservation(user, reservation)
+                .orElseThrow(() -> new PaymentException(USER_NOT_MATCHED));
+        return new PaymentStatusResponse( payment.getPaymentStatus() );
     }
 
 }

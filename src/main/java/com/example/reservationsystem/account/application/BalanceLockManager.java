@@ -32,7 +32,7 @@ public class BalanceLockManager {
             waitTime = 5,
             releaseTime = 10
     )
-    public Long depositWithLock(Long userId, Long amount ) {
+    public Long depositWithLock( Long userId, Long amount ) {
         User user = userRepository.getByIdOrThrow( userId );
         return balanceManager.deposit( user, amount );
     }
