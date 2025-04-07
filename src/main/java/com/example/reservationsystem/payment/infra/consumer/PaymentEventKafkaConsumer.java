@@ -14,7 +14,7 @@ public class PaymentEventKafkaConsumer {
     private final PaymentEventProcessor paymentEventProcessor;
 
     @Async
-    @KafkaListener( id = "simple", topics = "ACCOUNT_DEBITED" )
+    @KafkaListener( topics = "ACCOUNT_DEBITED", groupId = "group_1" )
     public void handleAccountDebitedEvent( AccountDebitedEvent accountDebitedEvent ) {
         // 멱등성이 지켜지므로 중복 검사 x
         try {

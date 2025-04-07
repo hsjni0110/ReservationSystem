@@ -35,7 +35,6 @@ public class PaymentService {
         Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
         validate( user, reservation );
         Payment payment = paymentManager.executePayment( user, reservation );
-        reservation.successPayment();
         pointService.earnPoints( userId, payment.getTotalPrice(), UUID.randomUUID().toString() );
         return new PaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getAmount(), payment.getPaymentStatus(), payment.getCreatedAt() );
     }

@@ -76,4 +76,8 @@ public class ReservationService {
         reservationManager.cancelReservations();
     }
 
+    public Long confirmReservation(Long userId, Long reservationId ) {
+        return reservationManager.confirmReservation(reservationId);
+    }
+
 }

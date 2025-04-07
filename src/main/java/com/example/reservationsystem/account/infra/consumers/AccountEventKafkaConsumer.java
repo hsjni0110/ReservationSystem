@@ -15,7 +15,7 @@ public class AccountEventKafkaConsumer {
     private final AccountEventProcessor processor;
 
     @Async
-    @KafkaListener( id = "simple", topics = "PAYMENT_ATTEMPT" )
+    @KafkaListener( topics = "PAYMENT_ATTEMPT", groupId = "group_1" )
     public void handlePaymentAttemptEvent( @Payload PaymentAttemptEvent event ) {
         if (processor.isDuplicate( event )) return;
 
