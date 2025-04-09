@@ -16,7 +16,6 @@ public class PointHistory {
     private Long pointHistoryId;
 
     private Long userId;
-    private String transactionId;
 
     @Column( length = 50 )
     @Enumerated( EnumType.STRING )
@@ -25,14 +24,13 @@ public class PointHistory {
     @Convert( converter = MoneyConverter.class )
     private Money earnedPoints ;
 
-    public PointHistory( Long userId, String transactionId, Money earnedPoints ) {
+    public PointHistory( Long userId, Money earnedPoints ) {
         this.userId = userId;
-        this.transactionId = transactionId;
         this.earnedPoints = earnedPoints;
     }
 
-    public static PointHistory earn( Long userId, String transactionId, Money earnedPoints ) {
-        return new PointHistory( userId, transactionId, earnedPoints );
+    public static PointHistory earn( Long userId, Money earnedPoints ) {
+        return new PointHistory( userId, earnedPoints );
     }
 
 }

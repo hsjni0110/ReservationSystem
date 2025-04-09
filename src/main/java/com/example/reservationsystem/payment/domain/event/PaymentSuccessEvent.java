@@ -13,11 +13,12 @@ public record PaymentSuccessEvent(
         LocalDateTime eventDate,
         // payload
         Long userId,
-        Long reservationId
+        Long reservationId,
+        Long paymentAmount
 ) implements AggregateEvent {
 
-    public PaymentSuccessEvent( Long paymentId, Long userId, Long reservationId ) {
-        this( paymentId, EventType.PAYMENT_SUCCESS, EventStatus.INIT, LocalDateTime.now(), userId, reservationId );
+    public PaymentSuccessEvent( Long paymentId, Long userId, Long reservationId, Long paymentAmount ) {
+        this( paymentId, EventType.PAYMENT_SUCCESS, EventStatus.INIT, LocalDateTime.now(), userId, reservationId, paymentAmount );
     }
 
     @Override

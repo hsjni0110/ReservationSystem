@@ -1,7 +1,7 @@
 package com.example.reservationsystem.account.listener;
 
+import com.example.reservationsystem.account.domain.event.AccountDebitFailedEvent;
 import com.example.reservationsystem.account.domain.event.AccountDebitedEvent;
-import com.example.reservationsystem.account.domain.event.InsufficientAmountEvent;
 import com.example.reservationsystem.common.application.EventOutboxService;
 import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
@@ -34,20 +34,20 @@ public class AccountEventListener {
     }
 
     @TransactionalEventListener( phase = TransactionPhase.BEFORE_COMMIT )
-    public void saveEventOutBoxForInsufficientAmount( InsufficientAmountEvent insufficientAmountEvent) {
+    public void saveEventOutBoxForInsufficientAmount( AccountDebitFailedEvent event ) {
         eventOutboxService.save(
                 AggregateType.ACCOUNT,
-                insufficientAmountEvent,
-                insufficientAmountEvent.getAggregateId(),
-                insufficientAmountEvent.getEventType(),
-                insufficientAmountEvent.getEventDate(),
+                event,
+                event.getAggregateId(),
+                event.getEventType(),
+                event.getEventDate(),
                 EventStatus.INIT
         );
     }
 
     @TransactionalEventListener( phase = TransactionPhase.AFTER_COMMIT )
-    public void sendInsufficientAmountEvent( InsufficientAmountEvent insufficientAmountEvent ) {
-        eventOutboxService.publishEvent( insufficientAmountEvent );
+    public void sendInsufficientAmountEvent( AccountDebitFailedEvent event ) {
+        eventOutboxService.publishEvent( event );
     }
 
 }

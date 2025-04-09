@@ -27,4 +27,12 @@ public class JsonUtils {
         }
     }
 
+    public static <T> T fromJson(String json, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("JSON 역직렬화 실패: " + clazz.getName(), e);
+        }
+    }
+
 }

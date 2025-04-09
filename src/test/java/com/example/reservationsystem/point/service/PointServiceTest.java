@@ -39,25 +39,13 @@ public class PointServiceTest extends ServiceTest {
     private PointRepository pointRepository;
 
     @Test
-    void 이미_처리된_트랜잭션이면_예외를_던진다() {
-        // given
-        String transactionId = "tx-123";
-        when(pointHistoryRepository.existsByTransactionId(transactionId)).thenReturn(true);
-
-        // when & then
-        assertThatThrownBy(() ->
-                pointService.earnPoints(1L, Money.wons(10000), transactionId))
-                .isInstanceOf(PointException.class);
-    }
-
-    @Test
     void 적립포인트가_0이하면_포인트와_이력이_저장되지_않는다() {
         // given
         when(pointHistoryRepository.existsByTransactionId(anyString())).thenReturn(false);
         when(pointPolicy.calculatePoints(any())).thenReturn(Money.ZERO);
 
         // when
-        pointService.earnPoints(1L, Money.wons(10000), "tx-001");
+        pointService.earnPoints(1L, Money.wons(10000));
 
         // then
         verify(pointRepository, never()).findByUserId(any());
@@ -72,7 +60,7 @@ public class PointServiceTest extends ServiceTest {
         when(pointRepository.findByUserId(1L)).thenReturn(Optional.empty());
 
         // when
-        pointService.earnPoints(1L, Money.wons(10000), "tx-002");
+        pointService.earnPoints(1L, Money.wons(10000));
 
         // then
         verify(pointRepository).findByUserId(1L);
@@ -93,7 +81,7 @@ public class PointServiceTest extends ServiceTest {
         when(pointRepository.findByUserId(userId)).thenReturn(Optional.of(point));
 
         // when
-        pointService.earnPoints(userId, payment, transactionId);
+        pointService.earnPoints(userId, payment);
 
         // then
         assertThat(point.getTotalPoints()).isEqualTo(earned);

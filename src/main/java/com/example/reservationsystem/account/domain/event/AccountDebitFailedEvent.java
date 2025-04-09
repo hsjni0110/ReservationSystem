@@ -3,10 +3,11 @@ package com.example.reservationsystem.account.domain.event;
 import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.common.type.EventType;
+import com.example.reservationsystem.payment.domain.event.PaymentAttemptEvent;
 
 import java.time.LocalDateTime;
 
-public record InsufficientAmountEvent(
+public record AccountDebitFailedEvent(
         Long accountId,
         EventType eventType,
         EventStatus eventStatus,
@@ -16,8 +17,8 @@ public record InsufficientAmountEvent(
         Long reservationId
 ) implements AggregateEvent {
 
-    public InsufficientAmountEvent( Long accountId, Long userId, Long reservationId ) {
-        this( accountId, EventType.INSUFFICIENT_BALANCE, EventStatus.INIT, LocalDateTime.now(), userId, reservationId );
+    public AccountDebitFailedEvent( Long accountId, Long userId, Long reservationId ) {
+        this( accountId, EventType.ACCOUNT_DEBITED_FAILURE, EventStatus.INIT, LocalDateTime.now(), userId, reservationId );
     }
 
     @Override

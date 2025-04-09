@@ -22,24 +22,16 @@ public class PointService {
     private final PointRepository pointRepository;
 
     @Transactional
-    public void earnPoints(Long userId, Money paymentAmount, String transactionId) {
-        validateTransactionId(transactionId);
-
+    public void earnPoints( Long userId, Money paymentAmount ) {
         Money earnedPoints = calculateEarnedPoints(paymentAmount);
         if (!earnedPoints.isPositive()) return;
 
         Point point = findOrCreateUserPoint(userId);
         point.addPoints(earnedPoints);
 
-        PointHistory history = PointHistory.earn(userId, transactionId, earnedPoints);
+        PointHistory history = PointHistory.earn(userId, earnedPoints);
         pointRepository.save(point);
         pointHistoryRepository.save(history);
-    }
-
-    private void validateTransactionId(String transactionId) {
-        if (pointHistoryRepository.existsByTransactionId(transactionId)) {
-            throw new PointException(ALREADY_ADDED_POINT);
-        }
     }
 
     private Money calculateEarnedPoints(Money paymentAmount) {

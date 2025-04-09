@@ -57,4 +57,8 @@ public class Payment extends BaseEntity {
         this.paymentStatus = PaymentStatus.PAY_CANCELED;
     }
 
+    public void attemptPayment() {
+        this.paymentStatus = PaymentStatus.NOT_PAYED;
+    }
+
 }

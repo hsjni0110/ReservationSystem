@@ -70,8 +70,8 @@ public class ReservationManager {
         reservationRepository.deleteAll(expiredReservations);
     }
 
-    public Long confirmReservation(Long reservationId) {
-        Reservation reservation = reservationRepository.getByIdOrThrow(reservationId);
+    public Long confirmReservation( Long reservationId ) {
+        Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
         reservation.successPayment();
         return reservationId;
     }

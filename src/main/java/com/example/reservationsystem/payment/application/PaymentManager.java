@@ -34,7 +34,9 @@ public class PaymentManager {
                     .map( ScheduledSeat::getSeatPrice )
                     .reduce( Money.ZERO, Money::add );
 
-            Payment payment = Payment.notPaidPayment(user, reservation, totalPrice);
+            Payment payment = paymentRepository.findByUserAndReservation(user, reservation)
+                    .orElseGet(() -> Payment.notPaidPayment( user, reservation, totalPrice ));
+            payment.attemptPayment();
             Payment saved = paymentRepository.save(payment);
 
             eventPublisher.publishEvent( new PaymentAttemptEvent( saved.getPaymentId(), user.getUserId(), totalPrice.getAmount(), reservation.getReservationId() ) );

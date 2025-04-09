@@ -1,10 +1,11 @@
 package com.example.reservationsystem.payment.application;
 
+import com.example.reservationsystem.account.domain.event.AccountDebitFailedEvent;
 import com.example.reservationsystem.account.domain.event.AccountDebitedEvent;
-import com.example.reservationsystem.account.domain.event.InsufficientAmountEvent;
 import com.example.reservationsystem.common.application.EventOutboxService;
 import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.infra.publisher.EventPublisher;
+import com.example.reservationsystem.payment.application.dto.CompletedPaymentResponse;
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,9 +26,9 @@ public class PaymentEventProcessor {
 
     @Transactional
     public void handleAccountDebited( AccountDebitedEvent event ) {
-        Long paymentId = paymentService.successPayment( event.userId(), event.reservationId() );
+        CompletedPaymentResponse completedPaymentResponse = paymentService.successPayment(event.userId(), event.reservationId());
         eventOutboxService.recordEventSuccess( event );
-        eventPublisher.publishEvent( new PaymentSuccessEvent( paymentId, event.userId(), event.reservationId()) );
+        eventPublisher.publishEvent( new PaymentSuccessEvent( completedPaymentResponse.paymentId(), event.userId(), event.reservationId(), completedPaymentResponse.totalPrice()) );
     }
 
     public void markFailure( AggregateEvent event ) {
@@ -35,7 +36,7 @@ public class PaymentEventProcessor {
     }
 
     @Transactional
-    public void handleInsufficientAmount( InsufficientAmountEvent event ) {
+    public void handleInsufficientAmount( AccountDebitFailedEvent event ) {
         paymentService.cancelPayment( event.userId(), event.reservationId() );
     }
 

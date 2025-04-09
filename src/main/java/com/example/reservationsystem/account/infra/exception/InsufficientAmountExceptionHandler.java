@@ -1,6 +1,7 @@
 package com.example.reservationsystem.account.infra.exception;
 
-import com.example.reservationsystem.account.domain.event.InsufficientAmountEvent;
+import com.example.reservationsystem.account.application.AccountEventProcessor;
+import com.example.reservationsystem.account.domain.event.AccountDebitFailedEvent;
 import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.exception.KafkaExceptionHandler;
 import com.example.reservationsystem.common.infra.publisher.EventPublisher;
@@ -20,9 +21,11 @@ import static com.example.reservationsystem.payment.exception.PaymentExceptionTy
 public class InsufficientAmountExceptionHandler implements KafkaExceptionHandler {
 
     private final EventPublisher eventPublisher;
+    private final AccountEventProcessor processor;
 
-    public InsufficientAmountExceptionHandler( @Qualifier("application") EventPublisher eventPublisher ) {
+    public InsufficientAmountExceptionHandler( @Qualifier("application") EventPublisher eventPublisher, AccountEventProcessor processor ) {
         this.eventPublisher = eventPublisher;
+        this.processor = processor;
     }
 
     @Override
@@ -40,7 +43,8 @@ public class InsufficientAmountExceptionHandler implements KafkaExceptionHandler
         log.warn("잔액 부족! accountId={}, 보유금액={}, 요청금액={}",
                 pe.getAccountId(), pe.getCurrentAmount(), pe.getRequestedAmount());
 
-        eventPublisher.publishEvent( new InsufficientAmountEvent(
+        processor.markFailure( event );
+        eventPublisher.publishEvent( new AccountDebitFailedEvent(
                 pe.getAccountId(), paymentAttemptEvent.userId(), paymentAttemptEvent.reservationId()
         ) );
     }

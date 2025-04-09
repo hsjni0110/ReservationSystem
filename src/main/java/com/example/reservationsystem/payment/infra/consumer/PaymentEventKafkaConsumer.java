@@ -1,7 +1,7 @@
 package com.example.reservationsystem.payment.infra.consumer;
 
+import com.example.reservationsystem.account.domain.event.AccountDebitFailedEvent;
 import com.example.reservationsystem.account.domain.event.AccountDebitedEvent;
-import com.example.reservationsystem.account.domain.event.InsufficientAmountEvent;
 import com.example.reservationsystem.payment.application.PaymentEventProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +22,17 @@ public class PaymentEventKafkaConsumer {
             paymentEventProcessor.handleAccountDebited( accountDebitedEvent );
         } catch ( Exception e ) {
             log.error( "❌ [Kafka] ACCOUNT_DEBITED 처리 중 오류 발생. event={}", accountDebitedEvent, e );
-            paymentEventProcessor.markFailure( accountDebitedEvent);
+            paymentEventProcessor.markFailure( accountDebitedEvent );
         }
     }
 
-    @KafkaListener( topics = "INSUFFICIENT_BALANCE", groupId = "group_1" )
-    public void handleInsufficientBalance( InsufficientAmountEvent insufficientAmountEvent ) {
+    @KafkaListener( topics = "ACCOUNT_DEBITED_FAILURE", groupId = "group_1" )
+    public void handleInsufficientBalance( AccountDebitFailedEvent event ) {
         try {
-            paymentEventProcessor.handleInsufficientAmount( insufficientAmountEvent );
+            paymentEventProcessor.handleInsufficientAmount( event );
         } catch ( Exception e ) {
-            log.error( "❌ [Kafka] INSUFFICIENT_BALANCE 처리 중 오류 발생. event={}", insufficientAmountEvent , e );
-            paymentEventProcessor.markFailure( insufficientAmountEvent );
+            log.error( "❌ [Kafka] ACCOUNT_DEBITED_FAILURE 처리 중 오류 발생. event={}", event, e );
+            paymentEventProcessor.markFailure( event );
         }
     }
 

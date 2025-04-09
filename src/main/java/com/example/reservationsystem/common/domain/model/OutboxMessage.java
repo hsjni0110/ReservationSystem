@@ -31,9 +31,11 @@ public class OutboxMessage {
 
     @Enumerated(EnumType.STRING)
     @Column( name = "event_type", length = 100, nullable = false )
+    @Getter
     private EventType eventType;
 
     @Column( name = "payload", columnDefinition = "json", nullable = false )
+    @Getter
     private String payload;
 
     @Enumerated( EnumType.STRING )
@@ -55,8 +57,8 @@ public class OutboxMessage {
         this.eventStatus = EventStatus.SEND_FAILURE;
     }
 
-    public boolean isSuccessEvent() {
-        return this.eventStatus == EventStatus.SEND_SUCCESS;
+    public boolean isProcessedEvent() {
+        return this.eventStatus == EventStatus.SEND_SUCCESS || this.eventStatus == EventStatus.SEND_FAILURE;
     }
 
 }
