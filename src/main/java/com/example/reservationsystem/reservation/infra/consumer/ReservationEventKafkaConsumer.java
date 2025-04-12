@@ -16,7 +16,11 @@ public class ReservationEventKafkaConsumer {
 
     private final PaymentSuccessEventProcessor paymentSuccessEventProcessor;
 
-    @KafkaListener( topics = "PAYMENT_SUCCESS", groupId = "group_1" )
+    @KafkaListener(
+            topics = "PAYMENT_SUCCESS",
+            groupId = "group_1",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void handlePaymentSuccess(
             @Payload PaymentSuccessEvent event,
             @Header("eventId") String eventId

@@ -4,6 +4,7 @@ import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.domain.model.ProcessedMessage;
 import com.example.reservationsystem.common.exception.BaseException;
 import com.example.reservationsystem.common.infra.repository.ProcessedMessageRepository;
+import com.example.reservationsystem.common.type.ConsumerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,12 +22,12 @@ public class FailureHandler {
     public <T extends AggregateEvent> void handleFailure(
             Long eventId,
             T event,
-            BaseException cause,
+            ConsumerType consumerType,
             Consumer<T> failureLogic,
             boolean shouldSkip
     ) {
         if ( shouldSkip ) {
-            processedMessageRepository.save(ProcessedMessage.skip(eventId));
+            processedMessageRepository.save( ProcessedMessage.skip( eventId, consumerType ));
         }
         failureLogic.accept(event);
     }

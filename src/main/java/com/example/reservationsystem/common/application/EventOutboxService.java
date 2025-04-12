@@ -2,15 +2,16 @@ package com.example.reservationsystem.common.application;
 
 import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.domain.model.OutboxMessage;
+import com.example.reservationsystem.common.domain.model.OutboxStateUpdater;
 import com.example.reservationsystem.common.infra.publisher.ExternalEventPublisher;
 import com.example.reservationsystem.common.infra.repository.EventOutboxRepository;
 import com.example.reservationsystem.common.exception.EventException;
 import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.common.type.EventType;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +26,7 @@ public class EventOutboxService {
     private final ExternalEventPublisher eventPublisher;
     private final OutboxEventMapper outboxEventMapper;
     private final EventOutboxRepository eventOutboxRepository;
+    private final OutboxStateUpdater outboxStateUpdater;
 
     public void save(AggregateType aggregateType, AggregateEvent aggregateEvent, Long aggregateId, EventType eventType, LocalDateTime createdAt, EventStatus eventStatus ) {
         OutboxMessage message = OutboxMessage.builder()
@@ -44,21 +46,11 @@ public class EventOutboxService {
         eventPublisher.publish(event, findByEvent( event ).getOutboxMessageId() )
                 .whenComplete((result, ex) -> {
                     if (ex != null) {
-                        recordEventFail(event);
+                        outboxStateUpdater.recordEventFail(event);
                     } else {
-                        recordEventSuccess(event);
+                        outboxStateUpdater.recordEventSuccess(event);
                     }
                 });
-    }
-
-    public void recordEventSuccess( AggregateEvent event ) {
-        OutboxMessage outboxMessage = findByEvent( event );
-        outboxMessage.recordSuccess();
-    }
-
-    public void recordEventFail( AggregateEvent event ) {
-        OutboxMessage outboxMessage = findByEvent( event );
-        outboxMessage.recordFailure();
     }
 
     public OutboxMessage findByEvent( AggregateEvent event) {
@@ -70,35 +62,19 @@ public class EventOutboxService {
         ).orElseThrow( () -> new EventException( EVENT_NOT_FOUND ) );
     }
 
-    public boolean checkDuplicateEvent( AggregateEvent event ) {
-        OutboxMessage outboxMessage = eventOutboxRepository.findByEventExceptStatus(
-                event.getEventType(),
-                event.getEventDate(),
-                event.getAggregateId()
-        ).orElseThrow(() -> new EventException(EVENT_NOT_FOUND));
-
-        return outboxMessage.isProcessedEvent();
-    }
-
-    public void recordEventFailure( AggregateEvent event) {
-        OutboxMessage outboxMessage = findByEvent( event );
-        outboxMessage.recordFailure();
-        eventOutboxRepository.save( outboxMessage );
-    }
-
     @Transactional
-    public void retryFailedEvents() {
+    public void retryUnprocessedEvents() {
         LocalDateTime threshold = LocalDateTime.now().minusMinutes(5);
-        List<OutboxMessage> failedEvents = eventOutboxRepository.findAllByStatusBeforeDate(EventStatus.INIT, threshold);
 
-        for (OutboxMessage event : failedEvents) {
-            eventPublisher.publish(
-                    outboxEventMapper.toEventObject(
-                            event.getPayload(),
-                            event.getEventType()
-                    ),
-                    event.getOutboxMessageId()
+        List<OutboxMessage> unprocessed = eventOutboxRepository
+                .findAllByStatusNotAndBeforeDate(EventStatus.SEND_SUCCESS, threshold);
+
+        for (OutboxMessage message : unprocessed) {
+            AggregateEvent event = outboxEventMapper.toEventObject(
+                    message.getPayload(),
+                    message.getEventType()
             );
+            publishEvent( event );
         }
     }
 

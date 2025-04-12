@@ -21,7 +21,6 @@ public class PointService {
     private final PointPolicy pointPolicy;
     private final PointRepository pointRepository;
 
-    @Transactional
     public void earnPoints( Long userId, Money paymentAmount ) {
         Money earnedPoints = calculateEarnedPoints(paymentAmount);
         if (!earnedPoints.isPositive()) return;

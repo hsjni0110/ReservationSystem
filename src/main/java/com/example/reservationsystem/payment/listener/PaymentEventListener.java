@@ -6,12 +6,14 @@ import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.payment.domain.event.PaymentAttemptEvent;
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentEventListener {
 
     private final EventOutboxService eventOutboxService;

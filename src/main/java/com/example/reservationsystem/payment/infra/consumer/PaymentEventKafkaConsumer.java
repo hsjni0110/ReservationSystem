@@ -19,7 +19,11 @@ public class PaymentEventKafkaConsumer {
     private final AccountDebitedEventProcessor accountDebitedEventProcessor;
     private final AccountDebitFailedEventProcessor accountDebitFailedEventProcessor;
 
-    @KafkaListener( topics = "ACCOUNT_DEBITED", groupId = "group_1" )
+    @KafkaListener(
+            topics = "ACCOUNT_DEBITED",
+            groupId = "group_1",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void handleAccountDebitedEvent(
             @Payload AccountDebitedEvent accountDebitedEvent,
             @Header("eventId") String eventId

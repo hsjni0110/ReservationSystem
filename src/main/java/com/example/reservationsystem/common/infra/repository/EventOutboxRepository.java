@@ -47,7 +47,7 @@ public interface EventOutboxRepository extends JpaRepository<OutboxMessage, Long
       AND m.eventStatus = :eventStatus
       AND m.eventDate = :eventDate
       AND m.aggregateId = :aggregateId
-""")
+    """)
     boolean existsByEvent(
             @Param("eventType") EventType eventType,
             @Param("eventStatus") EventStatus eventStatus,
@@ -55,8 +55,16 @@ public interface EventOutboxRepository extends JpaRepository<OutboxMessage, Long
             @Param("aggregateId") Long aggregateId
     );
 
-    @Query("SELECT om FROM OutboxMessage om WHERE om.eventStatus = :status AND om.eventDate < :dateTime")
-    List<OutboxMessage> findAllByStatusBeforeDate(@Param("status") EventStatus status, @Param("dateTime") LocalDateTime dateTime);
+    @Query("""
+    SELECT om
+    FROM OutboxMessage om
+    WHERE om.eventStatus <> :status
+      AND om.eventDate < :threshold
+    """)
+    List<OutboxMessage> findAllByStatusNotAndBeforeDate(
+            @Param("status") EventStatus status,
+            @Param("threshold") LocalDateTime threshold
+    );
 
     @Modifying
     @Query("DELETE FROM OutboxMessage om WHERE om.eventStatus = :status AND om.eventDate < :dateTime")

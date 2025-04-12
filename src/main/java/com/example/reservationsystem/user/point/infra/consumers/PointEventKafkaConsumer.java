@@ -1,29 +1,32 @@
 package com.example.reservationsystem.user.point.infra.consumers;
 
-import com.example.reservationsystem.common.application.EventOutboxService;
-import com.example.reservationsystem.common.domain.model.Money;
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
-import com.example.reservationsystem.user.point.application.PointService;
+import com.example.reservationsystem.user.point.application.PaymentSuccessProcessor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PointEventKafkaConsumer {
 
-    private final EventOutboxService eventOutboxService;
-    private final PointService pointService;
+    private final PaymentSuccessProcessor paymentSuccessProcessor;
 
-    @KafkaListener( topics = "PAYMENT_SUCCESS", groupId = "group_1" )
-    public void handlePaymentSuccess( PaymentSuccessEvent event ) {
-        if (eventOutboxService.checkDuplicateEvent( event )) return;
-
-        pointService.earnPoints(
-                event.userId(),
-                Money.wons( event.paymentAmount() )
-        );
-        eventOutboxService.recordEventSuccess( event );
+    @KafkaListener(
+            topics = "PAYMENT_SUCCESS",
+            groupId = "point_group",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
+    public void handlePaymentSuccess(
+            @Payload PaymentSuccessEvent event,
+            @Header("eventId") String eventId
+    ) {
+        log.info("Point 적립!");
+        paymentSuccessProcessor.process( event, eventId );
     }
 
 }

@@ -20,7 +20,7 @@ public class OutboxScheduler {
     @Scheduled(fixedRate = 60000)
     public void retryFailedEvents() {
         logger.info("Retry Failed Outbox Event Scheduler Executed");
-        eventOutboxService.retryFailedEvents();
+        eventOutboxService.retryUnprocessedEvents();
     }
 
     /**

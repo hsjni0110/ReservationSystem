@@ -1,28 +1,31 @@
-package com.example.reservationsystem.reservation.application.processor;
+package com.example.reservationsystem.user.point.application;
 
 import com.example.reservationsystem.common.domain.MessageProcessingService;
+import com.example.reservationsystem.common.domain.model.Money;
 import com.example.reservationsystem.common.type.ConsumerType;
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
-import com.example.reservationsystem.reservation.application.ReservationService;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PaymentSuccessEventProcessor {
+public class PaymentSuccessProcessor {
 
     private final MessageProcessingService processor;
-    private final ReservationService reservationService;
+    private final PointService pointService;
 
     @Transactional
     public void process( PaymentSuccessEvent event, String eventIdStr ) {
         processor.process(
                 eventIdStr,
                 event,
-                ConsumerType.CONFIRM_RESERVATION,
+                ConsumerType.EARN_POINT,
                 e -> {
-                    reservationService.confirmReservation(e.userId(), e.reservationId());
+                    pointService.earnPoints(
+                            event.userId(),
+                            Money.wons( event.paymentAmount() )
+                    );
                 },
                 (e, ex) -> {
                 },
