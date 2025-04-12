@@ -77,7 +77,7 @@ public class ReservationService {
     }
 
     public Long confirmReservation( Long userId, Long reservationId ) {
-        return reservationManager.confirmReservation(reservationId);
+        return reservationManager.confirmReservation( reservationId );
     }
 
 }

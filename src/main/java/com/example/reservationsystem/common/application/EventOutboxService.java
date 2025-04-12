@@ -2,14 +2,14 @@ package com.example.reservationsystem.common.application;
 
 import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.domain.model.OutboxMessage;
+import com.example.reservationsystem.common.infra.publisher.ExternalEventPublisher;
 import com.example.reservationsystem.common.infra.repository.EventOutboxRepository;
 import com.example.reservationsystem.common.exception.EventException;
 import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.common.type.EventType;
-import com.example.reservationsystem.common.infra.publisher.EventPublisher;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,17 +19,12 @@ import static com.example.reservationsystem.common.exception.EventExceptionType.
 import static com.example.reservationsystem.common.utils.JsonUtils.toJson;
 
 @Service
+@RequiredArgsConstructor
 public class EventOutboxService {
 
-    private final EventPublisher eventPublisher;
+    private final ExternalEventPublisher eventPublisher;
     private final OutboxEventMapper outboxEventMapper;
     private final EventOutboxRepository eventOutboxRepository;
-
-    public EventOutboxService(@Qualifier("kafka") EventPublisher eventPublisher, OutboxEventMapper outboxEventMapper, EventOutboxRepository eventOutboxRepository ) {
-        this.eventPublisher = eventPublisher;
-        this.outboxEventMapper = outboxEventMapper;
-        this.eventOutboxRepository = eventOutboxRepository;
-    }
 
     public void save(AggregateType aggregateType, AggregateEvent aggregateEvent, Long aggregateId, EventType eventType, LocalDateTime createdAt, EventStatus eventStatus ) {
         OutboxMessage message = OutboxMessage.builder()
@@ -46,12 +41,24 @@ public class EventOutboxService {
     }
 
     public void publishEvent( AggregateEvent event ) {
-        eventPublisher.publishEvent( event );
+        eventPublisher.publish(event, findByEvent( event ).getOutboxMessageId() )
+                .whenComplete((result, ex) -> {
+                    if (ex != null) {
+                        recordEventFail(event);
+                    } else {
+                        recordEventSuccess(event);
+                    }
+                });
     }
 
     public void recordEventSuccess( AggregateEvent event ) {
         OutboxMessage outboxMessage = findByEvent( event );
         outboxMessage.recordSuccess();
+    }
+
+    public void recordEventFail( AggregateEvent event ) {
+        OutboxMessage outboxMessage = findByEvent( event );
+        outboxMessage.recordFailure();
     }
 
     public OutboxMessage findByEvent( AggregateEvent event) {
@@ -85,11 +92,12 @@ public class EventOutboxService {
         List<OutboxMessage> failedEvents = eventOutboxRepository.findAllByStatusBeforeDate(EventStatus.INIT, threshold);
 
         for (OutboxMessage event : failedEvents) {
-            eventPublisher.publishEvent(
+            eventPublisher.publish(
                     outboxEventMapper.toEventObject(
                             event.getPayload(),
                             event.getEventType()
-                    )
+                    ),
+                    event.getOutboxMessageId()
             );
         }
     }

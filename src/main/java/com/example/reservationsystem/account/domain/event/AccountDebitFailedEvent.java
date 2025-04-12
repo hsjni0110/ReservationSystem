@@ -3,27 +3,25 @@ package com.example.reservationsystem.account.domain.event;
 import com.example.reservationsystem.common.domain.model.AggregateEvent;
 import com.example.reservationsystem.common.type.EventStatus;
 import com.example.reservationsystem.common.type.EventType;
-import com.example.reservationsystem.payment.domain.event.PaymentAttemptEvent;
 
 import java.time.LocalDateTime;
 
 public record AccountDebitFailedEvent(
-        Long accountId,
+        Long userId,
         EventType eventType,
         EventStatus eventStatus,
         LocalDateTime eventDate,
         // payload
-        Long userId,
         Long reservationId
 ) implements AggregateEvent {
 
-    public AccountDebitFailedEvent( Long accountId, Long userId, Long reservationId ) {
-        this( accountId, EventType.ACCOUNT_DEBITED_FAILURE, EventStatus.INIT, LocalDateTime.now(), userId, reservationId );
+    public AccountDebitFailedEvent( Long userId, Long reservationId ) {
+        this( userId, EventType.ACCOUNT_DEBITED_FAILURE, EventStatus.INIT, LocalDateTime.now(), reservationId );
     }
 
     @Override
     public Long getAggregateId() {
-        return accountId;
+        return userId;
     }
 
     @Override

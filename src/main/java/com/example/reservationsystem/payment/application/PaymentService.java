@@ -1,6 +1,5 @@
 package com.example.reservationsystem.payment.application;
 
-import com.example.reservationsystem.common.infra.publisher.EventPublisher;
 import com.example.reservationsystem.common.type.PaymentStatus;
 import com.example.reservationsystem.payment.application.dto.CompletedPaymentResponse;
 import com.example.reservationsystem.payment.application.dto.PaymentStatusResponse;
@@ -12,6 +11,7 @@ import com.example.reservationsystem.reservation.domain.Reservation;
 import com.example.reservationsystem.reservation.infra.repository.ReservationRepository;
 import com.example.reservationsystem.user.signup.domain.model.User;
 import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,21 +20,13 @@ import static com.example.reservationsystem.payment.exception.PaymentExceptionTy
 import static com.example.reservationsystem.payment.exception.PaymentExceptionType.USER_NOT_MATCHED;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
 
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
     private final PaymentManager paymentManager;
     private final PaymentRepository paymentRepository;
-    private final EventPublisher eventPublisher;
-
-    public PaymentService( UserRepository userRepository, ReservationRepository reservationRepository, PaymentManager paymentManager, PaymentRepository paymentRepository, @Qualifier("application") EventPublisher eventPublisher ) {
-        this.userRepository = userRepository;
-        this.reservationRepository = reservationRepository;
-        this.paymentManager = paymentManager;
-        this.paymentRepository = paymentRepository;
-        this.eventPublisher = eventPublisher;
-    }
 
     @Transactional
     public PaymentResponse pay( Long userId, Long reservationId ) {
@@ -79,6 +71,7 @@ public class PaymentService {
                 }));
     }
 
+    @Transactional
     public void cancelPayment( Long userId, Long reservationId ) {
         User user = userRepository.getByIdOrThrow( userId );
         Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );

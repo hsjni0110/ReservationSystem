@@ -6,12 +6,15 @@ import com.example.reservationsystem.common.application.EventOutboxService;
 import com.example.reservationsystem.common.type.AggregateType;
 import com.example.reservationsystem.common.type.EventStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AccountEventListener {
 
     private final EventOutboxService eventOutboxService;
@@ -28,6 +31,7 @@ public class AccountEventListener {
         );
     }
 
+    @Async
     @TransactionalEventListener( phase = TransactionPhase.AFTER_COMMIT )
     public void sendAccountDebitedEvent( AccountDebitedEvent accountDebitedEvent ) {
         eventOutboxService.publishEvent( accountDebitedEvent );
@@ -45,8 +49,10 @@ public class AccountEventListener {
         );
     }
 
+    @Async
     @TransactionalEventListener( phase = TransactionPhase.AFTER_COMMIT )
     public void sendInsufficientAmountEvent( AccountDebitFailedEvent event ) {
+        log.info("✅ AFTER_COMMIT caught event: {}", event.getClass().getSimpleName());
         eventOutboxService.publishEvent( event );
     }
 

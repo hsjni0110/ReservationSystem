@@ -2,10 +2,13 @@ package com.example.reservationsystem.payment.infra.consumer;
 
 import com.example.reservationsystem.account.domain.event.AccountDebitFailedEvent;
 import com.example.reservationsystem.account.domain.event.AccountDebitedEvent;
-import com.example.reservationsystem.payment.application.PaymentEventProcessor;
+import com.example.reservationsystem.payment.application.processors.AccountDebitFailedEventProcessor;
+import com.example.reservationsystem.payment.application.processors.AccountDebitedEventProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,27 +16,23 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PaymentEventKafkaConsumer {
 
-    private final PaymentEventProcessor paymentEventProcessor;
+    private final AccountDebitedEventProcessor accountDebitedEventProcessor;
+    private final AccountDebitFailedEventProcessor accountDebitFailedEventProcessor;
 
     @KafkaListener( topics = "ACCOUNT_DEBITED", groupId = "group_1" )
-    public void handleAccountDebitedEvent( AccountDebitedEvent accountDebitedEvent ) {
-        // 멱등성이 지켜지므로 중복 검사 x
-        try {
-            paymentEventProcessor.handleAccountDebited( accountDebitedEvent );
-        } catch ( Exception e ) {
-            log.error( "❌ [Kafka] ACCOUNT_DEBITED 처리 중 오류 발생. event={}", accountDebitedEvent, e );
-            paymentEventProcessor.markFailure( accountDebitedEvent );
-        }
+    public void handleAccountDebitedEvent(
+            @Payload AccountDebitedEvent accountDebitedEvent,
+            @Header("eventId") String eventId
+    ) {
+        accountDebitedEventProcessor.process( accountDebitedEvent, eventId );
     }
 
     @KafkaListener( topics = "ACCOUNT_DEBITED_FAILURE", groupId = "group_1" )
-    public void handleInsufficientBalance( AccountDebitFailedEvent event ) {
-        try {
-            paymentEventProcessor.handleInsufficientAmount( event );
-        } catch ( Exception e ) {
-            log.error( "❌ [Kafka] ACCOUNT_DEBITED_FAILURE 처리 중 오류 발생. event={}", event, e );
-            paymentEventProcessor.markFailure( event );
-        }
+    public void handleAccountDebitedFailedEvent(
+            @Payload AccountDebitFailedEvent event,
+            @Header("eventId") String eventId
+    ) {
+        accountDebitFailedEventProcessor.process( event, eventId );
     }
 
 }

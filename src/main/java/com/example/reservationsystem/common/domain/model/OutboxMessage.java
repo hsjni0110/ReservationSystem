@@ -20,6 +20,7 @@ public class OutboxMessage {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
+    @Getter
     private Long outboxMessageId;
 
     @Enumerated(EnumType.STRING)

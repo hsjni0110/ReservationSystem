@@ -10,19 +10,9 @@ import lombok.RequiredArgsConstructor;
 public class PaymentException extends BaseException {
 
     private final PaymentExceptionType exceptionType;
-    private Long accountId;
-    private Money currentAmount;
-    private Money requestedAmount;
 
-    public PaymentException(PaymentExceptionType exceptionType) {
+    public PaymentException( PaymentExceptionType exceptionType ) {
         this.exceptionType = exceptionType;
-    }
-
-    public PaymentException(PaymentExceptionType exceptionType, Long accountId, Money currentAmount, Money requestedAmount) {
-        this.exceptionType = exceptionType;
-        this.accountId = accountId;
-        this.currentAmount = currentAmount;
-        this.requestedAmount = requestedAmount;
     }
 
     @Override

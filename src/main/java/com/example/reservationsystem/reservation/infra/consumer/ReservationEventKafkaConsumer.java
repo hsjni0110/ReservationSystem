@@ -1,10 +1,12 @@
 package com.example.reservationsystem.reservation.infra.consumer;
 
 import com.example.reservationsystem.payment.domain.event.PaymentSuccessEvent;
-import com.example.reservationsystem.reservation.application.ReservationEventProcessor;
+import com.example.reservationsystem.reservation.application.processor.PaymentSuccessEventProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,16 +14,14 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ReservationEventKafkaConsumer {
 
-    private final ReservationEventProcessor reservationEventProcessor;
+    private final PaymentSuccessEventProcessor paymentSuccessEventProcessor;
 
     @KafkaListener( topics = "PAYMENT_SUCCESS", groupId = "group_1" )
-    public void handlePaymentSuccess( PaymentSuccessEvent event ) {
-        try {
-            reservationEventProcessor.handlePaymentSuccess( event );
-        } catch ( Exception e ) {
-            log.error( "❌ [Kafka] PAYMENT_SUCCESS 처리 중 오류 발생. event={}", event, e );
-            reservationEventProcessor.markFailure( event );
-        }
+    public void handlePaymentSuccess(
+            @Payload PaymentSuccessEvent event,
+            @Header("eventId") String eventId
+    ) {
+        paymentSuccessEventProcessor.process( event, eventId );
     }
 
 }
