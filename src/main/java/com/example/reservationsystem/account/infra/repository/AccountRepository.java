@@ -13,7 +13,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Lock(LockModeType.OPTIMISTIC)
     @Query("select a from Account a where a.user = :user")
-    Optional<Account> findByUserForUpdate(User user);
+    Optional<Account> findByUserForUpdate( User user );
+
+    Optional<Account> findByUserUserId( Long userId );
 
 }
 

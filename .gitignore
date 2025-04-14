@@ -39,3 +39,7 @@ out/
 application.yml
 application-test.yml
 .jqwik-database
+package-lock.json
+package.json
+tokens.json
+node_modules

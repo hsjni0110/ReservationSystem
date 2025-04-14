@@ -5,10 +5,8 @@ import com.example.reservationsystem.account.application.dto.BalanceRequest;
 import com.example.reservationsystem.account.application.dto.BalanceResponse;
 import com.example.reservationsystem.auth.domain.Auth;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,12 +15,21 @@ public class AccountController {
 
     private final AccountService accountService;
 
+    @GetMapping
+    public ResponseEntity<BalanceResponse> getBalance(
+            @Auth Long userId
+    ) {
+        BalanceResponse balance = accountService.getBalance( userId );
+        return ResponseEntity.ok( balance );
+    }
+
     @PostMapping("/recharge")
-    public BalanceResponse rechargeAccount(
+    public ResponseEntity<BalanceResponse> rechargeAccount(
             @Auth Long userId,
             @RequestBody BalanceRequest request
     ) {
-        return accountService.recharge( userId, request.rechargeAmount() );
+        BalanceResponse recharge = accountService.recharge(userId, request.rechargeAmount());
+        return ResponseEntity.ok( recharge );
     }
 
 }

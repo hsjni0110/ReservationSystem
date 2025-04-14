@@ -26,7 +26,7 @@ public class Account extends BaseEntity {
     private Long accountId;
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn( name = "user_id" )
     private User user;
 
     @Getter
