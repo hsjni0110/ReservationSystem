@@ -42,7 +42,7 @@ public class MessageProcessingService {
 
         } catch (BaseException e) {
             log.error("[Kafka] handle failed - eventId={}, error={}", eventId, e.exceptionType().errorMessage(), e);
-            failureHandler.handleFailure(eventId, event, consumerType, ev -> onFailure.accept(ev, e), shouldSkipOnFailure);
+            failureHandler.handleFailure( eventId, event, consumerType, ev -> onFailure.accept( ev, e ), shouldSkipOnFailure );
             throw e;
         }
 
