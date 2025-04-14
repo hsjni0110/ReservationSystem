@@ -29,29 +29,29 @@ public class KafkaConsumerConfig {
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> config = new HashMap<>();
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "group_1");
-        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        return new DefaultKafkaConsumerFactory<>(config);
+        config.put( ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092" );
+        config.put( ConsumerConfig.GROUP_ID_CONFIG, "group_1" );
+        config.put( ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class );
+        config.put( ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class );
+        return new DefaultKafkaConsumerFactory<>( config );
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(KafkaTemplate<?, ?> kafkaTemplate) {
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory( KafkaTemplate<?, ?> kafkaTemplate ) {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(consumerFactory());
-        factory.setCommonErrorHandler(errorHandler(kafkaTemplate));
-        factory.setRecordMessageConverter(new StringJsonMessageConverter());
+        factory.setConsumerFactory( consumerFactory() );
+        factory.setCommonErrorHandler( errorHandler( kafkaTemplate ) );
+        factory.setRecordMessageConverter( new StringJsonMessageConverter() );
         return factory;
     }
 
-    public CommonErrorHandler errorHandler(KafkaTemplate<?, ?> kafkaTemplate) {
+    public CommonErrorHandler errorHandler( KafkaTemplate<?, ?> kafkaTemplate ) {
         DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(kafkaTemplate,
-                (record, ex) -> new TopicPartition(record.topic() + ".DLT", record.partition()));
+                ( record, ex ) -> new TopicPartition( record.topic() + ".DLT", record.partition() ) );
 
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(2000L, 3));
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler( recoverer, new FixedBackOff( 2000L, 3 ) );
 
-        errorHandler.setRetryListeners((record, ex, deliveryAttempt) -> {
+        errorHandler.setRetryListeners(( record, ex, deliveryAttempt ) -> {
             log.warn("⏳ Retrying (attempt {}): key={}, topic={}, error={}",
                     deliveryAttempt,
                     record.key(), record.topic(), ex.getMessage());
