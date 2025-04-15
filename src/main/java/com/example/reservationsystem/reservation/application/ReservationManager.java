@@ -67,7 +67,7 @@ public class ReservationManager {
         }
 
         expiredReservations.forEach( Reservation::cancelReservation );
-        reservationRepository.deleteAll(expiredReservations);
+        reservationRepository.deleteAll( expiredReservations );
     }
 
     public Long confirmReservation( Long reservationId ) {

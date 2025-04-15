@@ -19,7 +19,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping("/seats")
+    @PostMapping("/seats")
     public ResponseEntity<List<ScheduledSeatResponse>> getAvailableSeats(
             @RequestBody AvailableSeatRequest request
     ) {

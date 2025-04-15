@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("예약 시스템 동시성 처리에서")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class ReservationConcurrencyTest {
 
     @Autowired
@@ -72,7 +74,7 @@ public class ReservationConcurrencyTest {
             executorService.submit(() -> {
                 try {
                     userRepository.save( 유저(userId) );
-                    reservationService.preserveSeat( userId, routeScheduleId, List.of(seatId ));
+                    reservationService.preserveSeat( userId, routeScheduleId, List.of( seatId ));
                     successCount.incrementAndGet();
                 } catch (ReservationException e) {
                 } finally {

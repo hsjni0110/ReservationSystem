@@ -41,7 +41,6 @@ public class PointServiceTest extends ServiceTest {
     @Test
     void 적립포인트가_0이하면_포인트와_이력이_저장되지_않는다() {
         // given
-        when(pointHistoryRepository.existsByTransactionId(anyString())).thenReturn(false);
         when(pointPolicy.calculatePoints(any())).thenReturn(Money.ZERO);
 
         // when
@@ -55,7 +54,6 @@ public class PointServiceTest extends ServiceTest {
     @Test
     void 유저_포인트가_없으면_새로_생성된다() {
         // given
-        when(pointHistoryRepository.existsByTransactionId(anyString())).thenReturn(false);
         when(pointPolicy.calculatePoints(any())).thenReturn(Money.wons(500));
         when(pointRepository.findByUserId(1L)).thenReturn(Optional.empty());
 
@@ -76,7 +74,6 @@ public class PointServiceTest extends ServiceTest {
 
         Point point = Point.of(userId);
 
-        when(pointHistoryRepository.existsByTransactionId(transactionId)).thenReturn(false);
         when(pointPolicy.calculatePoints(payment)).thenReturn(earned);
         when(pointRepository.findByUserId(userId)).thenReturn(Optional.of(point));
 

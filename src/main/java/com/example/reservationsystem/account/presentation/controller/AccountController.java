@@ -28,7 +28,7 @@ public class AccountController {
             @Auth Long userId,
             @RequestBody BalanceRequest request
     ) {
-        BalanceResponse recharge = accountService.recharge(userId, request.rechargeAmount());
+        BalanceResponse recharge = accountService.recharge( userId, request.rechargeAmount() );
         return ResponseEntity.ok( recharge );
     }
 

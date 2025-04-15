@@ -8,6 +8,7 @@ import com.example.reservationsystem.account.exception.AccountException;
 import com.example.reservationsystem.user.signup.domain.model.User;
 import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import static com.example.reservationsystem.account.exception.AccountExceptionTy
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
 
     private final BalanceLockManager balanceLockManager;
@@ -27,7 +29,8 @@ public class AccountService {
             Money recharged = balanceLockManager.rechargeWithLock( userId, amount );
             return new BalanceResponse( recharged.getAmount().longValue() );
         } catch ( Exception e ) {
-            throw new AccountException( INVALID_RECHARGED_PRICE );
+            log.error( e.getMessage(), e );
+            throw new RuntimeException( e );
         }
     }
 

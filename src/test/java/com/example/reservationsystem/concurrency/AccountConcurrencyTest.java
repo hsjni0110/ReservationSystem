@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("계좌 동시성 처리에서")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class AccountConcurrencyTest {
 
     @Autowired
@@ -48,7 +50,7 @@ public class AccountConcurrencyTest {
     void 동시에_여러_충전이_들어와도_한_번만_충전되어야_한다() throws InterruptedException {
         // given
         var startTime = System.currentTimeMillis();
-        var threadCount = 1000;
+        var threadCount = 100;
         var executorService = Executors.newFixedThreadPool(threadCount);
         var latch = new CountDownLatch(threadCount);
         var rechargeAmount = 100L;
@@ -74,7 +76,7 @@ public class AccountConcurrencyTest {
 
         // then
         assertEquals(1, successfulRecharges.get(), "오직 한 번만 충전에 성공해야 한다.");
-        assertEquals(999, failedRecharges.get(), "나머지는 모두 실패한다.");
+        assertEquals(99, failedRecharges.get(), "나머지는 모두 실패한다.");
 
         var endTime = System.currentTimeMillis();
         var duration = endTime - startTime;

@@ -65,6 +65,7 @@ public class ScheduledSeat extends BaseEntity {
             throw new ReservationException(NOT_PRESERVED_SEAT);
         }
 
+        this.reservation = null;
         this.isReserved = false;
         routeSchedule.increaseSeat();
     }
