@@ -45,16 +45,12 @@ public class ReservationService {
 
     public SeatReservationResponse preserveSeat( Long userId, Long routeScheduleId, List<Long> scheduleSeatIds ) {
         validate( routeScheduleId, scheduleSeatIds );
-        try {
-            Reservation reservation = reservationLockManager.preserveWithLock( userId, routeScheduleId, scheduleSeatIds );
-            return new SeatReservationResponse(
-                    reservation.getReservationId(),
-                    reservation.getScheduledSeats().stream()
-                            .map(ScheduledSeat::getScheduledSeatId)
-                            .toList());
-        } catch ( PessimisticLockingFailureException e ) {
-            throw new ReservationException( ALREADY_PRESERVED_SEAT );
-        }
+        Reservation reservation = reservationLockManager.preserveWithLock( userId, routeScheduleId, scheduleSeatIds );
+        return new SeatReservationResponse(
+                reservation.getReservationId(),
+                reservation.getScheduledSeats().stream()
+                        .map(ScheduledSeat::getScheduledSeatId)
+                        .toList());
     }
 
     private void validate( Long routeScheduleId, List<Long> scheduleSeatId ) {

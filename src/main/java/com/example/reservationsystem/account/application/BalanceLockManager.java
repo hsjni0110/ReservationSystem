@@ -18,7 +18,7 @@ public class BalanceLockManager {
     }
 
     @DistributedSimpleLock(
-            key = "user:#userId",
+            key = "'user:' + #userId",
             waitTime = 5,
             releaseTime = 10
     )

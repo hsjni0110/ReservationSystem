@@ -13,10 +13,12 @@ export default function () {
     const token = accessTokens[Math.floor(Math.random() * accessTokens.length)];
 
     const randomRouteId = Math.floor(Math.random() * 12000) + 1;
+    const startSeatId = Math.floor(Math.random() * 19); // 0~18
+    const seatIds = [startSeatId, startSeatId + 1];
 
     const payload = JSON.stringify({
         routeScheduleId: randomRouteId,
-        scheduleSeatIds: [3, 4],
+        scheduleSeatIds: seatIds,
     });
 
     const headers = {
