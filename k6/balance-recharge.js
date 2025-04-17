@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
-import { options, BASE_URL } from '../common/test-options.js';
+import { options, BASE_URL } from './common/test-options.js';
 
 export { options };
 

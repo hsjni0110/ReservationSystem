@@ -2,16 +2,19 @@ package com.example.reservationsystem.reservation.application;
 
 import com.example.reservationsystem.reservation.domain.Reservation;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;
+import com.example.reservationsystem.reservation.exception.ReservationException;
 import com.example.reservationsystem.reservation.infra.repository.ReservationRepository;
 import com.example.reservationsystem.reservation.infra.repository.ScheduledSeatRepository;
 import com.example.reservationsystem.user.signup.domain.model.User;
 import com.example.reservationsystem.user.signup.infra.repository.UserRepository;
 import com.example.reservationsystem.vehicle.infra.repository.RouteScheduleRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.example.reservationsystem.reservation.exception.ReservationExceptionType.ROUTE_SCHEDULE_NOT_FOUND;
 
 @Component
 public class ReservationManager {
@@ -22,29 +25,40 @@ public class ReservationManager {
     private final ScheduledSeatRepository scheduledSeatRepository;
     private final ReservationRepository reservationRepository;
     private final ReservationCacheManager reservationCacheManager;
+    private final RouteScheduleRepository routeScheduleRepository;
 
-    public ReservationManager(UserRepository userRepository, ScheduledSeatRepository scheduledSeatRepository, ReservationRepository reservationRepository, RouteScheduleRepository routeScheduleRepository, ReservationCacheManager reservationCacheManager) {
+    public ReservationManager(UserRepository userRepository, ScheduledSeatRepository scheduledSeatRepository, ReservationRepository reservationRepository, ReservationCacheManager reservationCacheManager, RouteScheduleRepository routeScheduleRepository) {
         this.userRepository = userRepository;
         this.scheduledSeatRepository = scheduledSeatRepository;
         this.reservationRepository = reservationRepository;
         this.reservationCacheManager = reservationCacheManager;
+        this.routeScheduleRepository = routeScheduleRepository;
     }
 
     @Transactional
     public Reservation preserve(Long userId, Long routeScheduleId, List<Long> scheduleSeatIds ) {
+        validate( routeScheduleId, scheduleSeatIds );
         User user = userRepository.getByIdOrThrow( userId );
 
-        List<ScheduledSeat> scheduledSeats = scheduleSeatIds.stream()
-                .map( scheduleSeatId -> scheduledSeatRepository.findByIdWithPessimisticLock( scheduleSeatId, routeScheduleId ))
-                .toList();
-
-        scheduledSeats.forEach(
-                ScheduledSeat::reserveSeat
-        );
+        List<ScheduledSeat> scheduledSeats = scheduledSeatRepository.findAllByIdsWithPessimisticLock(scheduleSeatIds, routeScheduleId);
 
         Reservation reservation = Reservation.from( user, scheduledSeats );
         evictCacheFromRouteSchedule( routeScheduleId );
-        return reservationRepository.save( reservation );
+        return reservationRepository.save(reservation);
+    }
+
+    private void validate( Long routeScheduleId, List<Long> scheduleSeatId ) {
+        validateRouteScheduleExist( routeScheduleId );
+        validateReserveTime( routeScheduleId );
+    }
+
+    private void validateReserveTime( Long routeScheduleId ) {
+        // 출발 시간 15분 이전인지 확인
+    }
+
+    private void validateRouteScheduleExist( Long routeScheduleId ) {
+        routeScheduleRepository.findById( routeScheduleId )
+                .orElseThrow(() -> new ReservationException( ROUTE_SCHEDULE_NOT_FOUND ));
     }
 
     private void evictCacheFromRouteSchedule(Long routeScheduleId) {

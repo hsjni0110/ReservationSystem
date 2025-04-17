@@ -55,7 +55,12 @@ public class Reservation extends BaseEntity {
     }
 
     public static Reservation from(User user, List<ScheduledSeat> scheduledSeat) {
-        return new Reservation( user, scheduledSeat, ReservationStatus.PENDING );
+        Reservation reservation = new Reservation(user, scheduledSeat, ReservationStatus.PENDING);
+        for (ScheduledSeat seat : scheduledSeat) {
+            seat.setReservation(reservation);
+            seat.reserveSeat();
+        }
+        return reservation;
     }
 
     public void authorizeUser(User user) {

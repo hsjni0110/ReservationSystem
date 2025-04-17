@@ -16,11 +16,11 @@ public class ReservationLockManager {
     }
 
     @DistributedSimpleLock(
-            key = "'reservation:' + #routeScheduleId + ':' + #scheduleSeatIds",
+            key = "'reservation:' + #routeScheduleId + ':[' + #scheduleSeatIds + ']'",
             waitTime = 1,
             releaseTime = 5
     )
-    public Reservation preserveWithLock( Long userId, Long routeScheduleId, List<Long> scheduleSeatIds ) {
+    public Reservation preserveWithLock(Long userId, Long routeScheduleId, List<Long> scheduleSeatIds ) {
         return reservationManager.preserve( userId, routeScheduleId, scheduleSeatIds );
     }
 

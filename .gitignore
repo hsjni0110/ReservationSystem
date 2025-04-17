@@ -43,3 +43,5 @@ package-lock.json
 package.json
 tokens.json
 node_modules
+/infra/prometheus/data/
+/infra/grafana/data/

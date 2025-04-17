@@ -24,9 +24,9 @@ import static com.example.reservationsystem.reservation.exception.ReservationExc
 public class ReservationService {
 
     private final ScheduledSeatRepository scheduledSeatRepository;
-    private final RouteScheduleRepository routeScheduleRepository;
     private final ReservationLockManager reservationLockManager;
     private final ReservationManager reservationManager;
+    private final RouteScheduleRepository routeScheduleRepository;
 
     @Cacheable(
             cacheNames = CacheConfig.ONE_MIN_CACHE,
@@ -44,27 +44,13 @@ public class ReservationService {
     }
 
     public SeatReservationResponse preserveSeat( Long userId, Long routeScheduleId, List<Long> scheduleSeatIds ) {
-        validate( routeScheduleId, scheduleSeatIds );
-        Reservation reservation = reservationLockManager.preserveWithLock( userId, routeScheduleId, scheduleSeatIds );
+        Reservation reservation = reservationLockManager.preserveWithLock(userId, routeScheduleId, scheduleSeatIds);
         return new SeatReservationResponse(
                 reservation.getReservationId(),
                 reservation.getScheduledSeats().stream()
                         .map(ScheduledSeat::getScheduledSeatId)
-                        .toList());
-    }
-
-    private void validate( Long routeScheduleId, List<Long> scheduleSeatId ) {
-        validateRouteScheduleExist( routeScheduleId );
-        validateReserveTime( routeScheduleId );
-    }
-
-    private void validateReserveTime( Long routeScheduleId ) {
-        // 출발 시간 15분 이전인지 확인
-    }
-
-    private void validateRouteScheduleExist( Long routeScheduleId ) {
-        routeScheduleRepository.findById( routeScheduleId )
-                .orElseThrow(() -> new ReservationException( ROUTE_SCHEDULE_NOT_FOUND ));
+                        .toList()
+        );
     }
 
     @Transactional

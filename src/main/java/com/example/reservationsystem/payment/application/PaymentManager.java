@@ -9,7 +9,6 @@ import com.example.reservationsystem.reservation.domain.Reservation;
 import com.example.reservationsystem.reservation.domain.ScheduledSeat;
 import com.example.reservationsystem.user.signup.domain.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component

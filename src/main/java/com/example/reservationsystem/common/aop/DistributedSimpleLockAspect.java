@@ -2,6 +2,7 @@ package com.example.reservationsystem.common.aop;
 
 import com.example.reservationsystem.common.annotation.DistributedSimpleLock;
 import com.example.reservationsystem.common.exception.BusinessException;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -20,6 +21,7 @@ import static com.example.reservationsystem.common.exception.BusinessExceptionTy
 
 @Aspect
 @Component
+@Slf4j
 public class DistributedSimpleLockAspect {
 
     private final RedisSimpleLock redisSimpleLock;
@@ -57,7 +59,7 @@ public class DistributedSimpleLockAspect {
                         distributedSimpleLock.timeUnit()
                 );
                 if (!acquired) {
-                    throw new BusinessException(OTHER_THREAD_ASSIGNED);
+                    throw new BusinessException( OTHER_THREAD_ASSIGNED );
                 }
                 return joinPoint.proceed();
             } finally {
@@ -81,7 +83,7 @@ public class DistributedSimpleLockAspect {
 
         List<String> lockKeys = seatIds.stream()
                 .map(id -> prefix + ":" + id)
-                .sorted() // deadlock 방지
+                .sorted()
                 .toList();
 
         String lockValue = UUID.randomUUID().toString();
@@ -96,15 +98,18 @@ public class DistributedSimpleLockAspect {
                         lockAnnotation.timeUnit()
                 );
                 if (!success) {
-                    throw new BusinessException(OTHER_THREAD_ASSIGNED);
+                    throw new BusinessException( OTHER_THREAD_ASSIGNED );
                 }
                 acquiredKeys.add(key);
             }
             return joinPoint.proceed();
         } finally {
+            long releaseStart = System.currentTimeMillis();
             for (String key : acquiredKeys) {
                 redisSimpleLock.releaseLock(key, lockValue);
+                log.info("Lock released: {}", key);
             }
+            log.info("🔓 Lock release took {} ms", System.currentTimeMillis() - releaseStart);
         }
     }
 }
