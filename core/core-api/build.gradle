@@ -1,0 +1,9 @@
+dependencies {
+
+    implementation(project(":account"))
+    implementation(project(":payment"))
+    implementation(project(":reservation"))
+    implementation(project(":user"))
+    implementation(project(":common"))
+
+}

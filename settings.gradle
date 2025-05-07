@@ -1,7 +1,13 @@
 rootProject.name = 'ReservationSystem'
 
 include(
-        "core-api"
+        "core-api",
+        "payment",
+        "common",
+        "account",
+        "user",
+        "reservation",
+        "event-outbox"
 )
 
 project(':core-api').projectDir = file('core/core-api')

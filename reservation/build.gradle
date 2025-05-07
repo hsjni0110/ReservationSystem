@@ -1,0 +1,9 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation(project(":common"))
+    implementation(project(":user"))
+    implementation(project(":event-outbox"))
+}
