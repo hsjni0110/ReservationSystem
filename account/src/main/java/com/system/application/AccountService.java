@@ -45,7 +45,7 @@ public class AccountService {
 
     @Transactional( readOnly = true )
     public BalanceResponse getBalance( long userId ) {
-        Account account = accountRepository.findByUserUserId( userId )
+        Account account = accountRepository.findByUserId( userId )
                 .orElseThrow(() -> new AccountException( ACCOUNT_NOT_FOUND ));
         return new BalanceResponse( account.getAmount().getAmount().longValue() );
     }

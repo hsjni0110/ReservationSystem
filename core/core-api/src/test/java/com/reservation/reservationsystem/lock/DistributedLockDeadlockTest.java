@@ -1,6 +1,5 @@
 package com.reservation.reservationsystem.lock;
 
-import com.reservation.reservationsystem.common.aop.DistributedSimpleLockAspect;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;

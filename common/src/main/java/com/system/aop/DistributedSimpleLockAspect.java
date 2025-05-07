@@ -69,10 +69,6 @@ public class DistributedSimpleLockAspect {
     }
 
     private Object proceedWithMultiLock(String evaluatedKey, DistributedSimpleLock lockAnnotation, ProceedingJoinPoint joinPoint) throws Throwable {
-        // 예: reservation:1234:[1,2,3]
-        // → prefix = reservation:1234
-        // → ids = [1,2,3]
-
         int listStart = evaluatedKey.indexOf('[');
         String prefix = evaluatedKey.substring(0, listStart);
         String rawList = evaluatedKey.substring(listStart)

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class ReservationCacheManager {
 
     @CacheEvict(
+            cacheNames = CacheConfig.ONE_MIN_CACHE,
             key = "'available-route-schedule'"
     )
     public void evictRouteScheduleCache() {}
@@ -17,5 +18,4 @@ public class ReservationCacheManager {
             key = "'route-schedule-' + #routeScheduleId"
     )
     public void evictRouteScheduleCache(Long routeScheduleId) {}
-
 }

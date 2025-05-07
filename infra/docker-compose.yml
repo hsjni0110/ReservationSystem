@@ -4,6 +4,17 @@ networks:
     driver: bridge
 
 services:
+  reservation-mysql:
+    image: mysql:8.0
+    container_name: reservation-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: reservation
+    ports:
+      - "3306:3306"
+    networks:
+      - monitor
   redis:
     container_name: redis
     image: redis:6.2
