@@ -1,6 +1,8 @@
 package com.system.application.dto;
 
+import java.math.BigDecimal;
+
 public record BalanceResponse(
-        long totalAmount
+        BigDecimal totalAmount
 ) {
 }

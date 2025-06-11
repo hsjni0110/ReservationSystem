@@ -15,8 +15,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.awaitility.Awaitility.given;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,7 +46,8 @@ public class AccountControllerTest extends ControllerTest {
         long rechargeAmount = 10000L;
         BalanceRequest balanceRequest = new BalanceRequest(10000L);
         BalanceResponse balanceResponse = new BalanceResponse(20000L);
-        given(accountService.recharge(any(Long.class), any(Long.class))).willReturn(balanceResponse);
+
+        given(accountService.recharge(any(Long.class), any(Long.class))).(balanceResponse);
 
         // when, then
         mockMvc.perform(post("/account/recharge")

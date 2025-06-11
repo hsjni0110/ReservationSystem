@@ -30,7 +30,7 @@ public class PaymentManager {
             payment.attemptPayment();
             Payment saved = paymentRepository.save(payment);
 
-            eventPublisher.publish( new PaymentAttemptEvent( saved.getPaymentId(), user.getUserId(), totalPrice.getAmount(), reservation.getReservationId() ) );
+            eventPublisher.publish( new PaymentAttemptEvent( saved.getPaymentId(), user.getUserId(), totalPrice.getMoney(), reservation.getReservationId() ) );
             return payment;
         } catch (Exception e) {
             throw new RuntimeException(e);

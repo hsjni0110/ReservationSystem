@@ -44,7 +44,7 @@ public class BalanceManagerTest extends DomainTest {
         Money totalAmount = balanceManager.recharge( 유저, amount );
 
         // then
-        assertThat(totalAmount.getAmount()).isEqualTo(BigDecimal.valueOf(20000));
+        assertThat(totalAmount.getMoney()).isEqualTo(BigDecimal.valueOf(20000));
     }
 
 }

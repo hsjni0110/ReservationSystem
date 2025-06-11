@@ -22,9 +22,9 @@ public class BalanceLockManager {
             waitTime = 5,
             releaseTime = 10
     )
-    public Money rechargeWithLock( Long userId, Long amount ) {
-        User user = userRepository.getByIdOrThrow( userId );
-        return balanceManager.recharge( user, amount );
+    public Money rechargeWithLock(Long userId, Long amount) {
+        User user = userRepository.getByIdOrThrow(userId);
+        return balanceManager.recharge(user, amount);
     }
 
     @DistributedSimpleLock(

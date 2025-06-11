@@ -1,5 +1,6 @@
 package com.system.application;
 
+import com.system.application.dto.BalanceResponse;
 import com.system.domain.model.Account;
 import com.system.domain.Money;
 import com.system.infra.repository.AccountRepository;
@@ -18,9 +19,15 @@ public class BalanceManager {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public Money recharge( User user, long amount ) {
+    public Money recharge(User user, long amount) {
         Account account = accountRepository.findByUserForUpdate( user.getUserId() ).orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
         return account.recharge( Money.wons(amount) );
+    }
+
+    public BalanceResponse getBalance(Long userId) {
+        Account account = accountRepository.findByUserId(userId)
+                .orElseThrow(() -> new AccountException(ACCOUNT_NOT_FOUND));
+        return new BalanceResponse(account.getAmount().getMoney());
     }
 
     @Transactional

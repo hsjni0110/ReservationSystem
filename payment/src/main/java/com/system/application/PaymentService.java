@@ -34,7 +34,7 @@ public class PaymentService {
         Reservation reservation = reservationRepository.getByIdOrThrow( reservationId );
         validate( user, reservation );
         Payment payment = paymentManager.executePayment( user, reservation );
-        return new PaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getAmount(), payment.getPaymentStatus(), payment.getCreatedAt() );
+        return new PaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getMoney(), payment.getPaymentStatus(), payment.getCreatedAt() );
     }
 
     public CompletedPaymentResponse successPayment(Long userId, Long reservationId ) {
@@ -43,7 +43,7 @@ public class PaymentService {
         Payment payment = paymentRepository.findByUserAndReservation(user, reservation)
                 .orElseThrow(() -> new ReservationException( USER_NOT_MATCHED ));
         payment.completePayment();
-        return new CompletedPaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getAmount().longValue() );
+        return new CompletedPaymentResponse( payment.getPaymentId(), payment.getTotalPrice().getMoney().longValue() );
     }
 
     private void validate( User user, Reservation reservation ) {

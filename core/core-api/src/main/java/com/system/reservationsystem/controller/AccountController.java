@@ -24,12 +24,12 @@ public class AccountController {
     }
 
     @PostMapping("/recharge")
-    public ResponseEntity<BalanceResponse> rechargeAccount(
+    public ResponseEntity<Void> rechargeAccount(
             @Auth Long userId,
             @RequestBody BalanceRequest request
     ) {
-        BalanceResponse recharge = accountService.recharge( userId, request.rechargeAmount() );
-        return ResponseEntity.ok( recharge );
+        accountService.recharge(userId, request.rechargeAmount());
+        return ResponseEntity.ok().build();
     }
 
 }
