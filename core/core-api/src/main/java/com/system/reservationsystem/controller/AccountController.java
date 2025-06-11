@@ -19,8 +19,8 @@ public class AccountController {
     public ResponseEntity<BalanceResponse> getBalance(
             @Auth Long userId
     ) {
-        BalanceResponse balance = accountService.getBalance( userId );
-        return ResponseEntity.ok( balance );
+        BalanceResponse balance = accountService.getBalance(userId);
+        return ResponseEntity.ok(balance);
     }
 
     @PostMapping("/recharge")

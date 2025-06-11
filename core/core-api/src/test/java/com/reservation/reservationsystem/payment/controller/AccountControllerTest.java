@@ -1,10 +1,9 @@
 package com.reservation.reservationsystem.payment.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reservation.reservationsystem.common.ControllerTest;
 import com.system.application.AccountService;
 import com.system.application.dto.BalanceRequest;
-import com.system.application.dto.BalanceResponse;
-import com.reservation.reservationsystem.common.ControllerTest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.system.reservationsystem.controller.AccountController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,11 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.awaitility.Awaitility.given;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("계좌 컨트롤러(AccountController)는")
@@ -45,16 +42,14 @@ public class AccountControllerTest extends ControllerTest {
         // given
         long rechargeAmount = 10000L;
         BalanceRequest balanceRequest = new BalanceRequest(10000L);
-        BalanceResponse balanceResponse = new BalanceResponse(20000L);
 
-        given(accountService.recharge(any(Long.class), any(Long.class))).(balanceResponse);
+        willDoNothing().given(accountService).recharge(any(Long.class), any(Long.class));
 
         // when, then
         mockMvc.perform(post("/account/recharge")
                 .content(objectMapper.writeValueAsString(balanceRequest))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.totalAmount").value(20000L));
+                .andExpect(status().isOk());
     }
 
 }
