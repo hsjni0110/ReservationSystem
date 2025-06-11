@@ -31,25 +31,33 @@ public class RouteService {
 
     @Transactional
     public Long createRoute(String departure, String arrival, LocalDate scheduleDate, List<String> times) {
+        validateAvailableRoute(departure, arrival, scheduleDate);
+        Route route = Route.create(departure, arrival, scheduleDate, times);
+        return routeRepository.save(route).getRouteId();
+    }
+
+    private void validateAvailableRoute(String departure, String arrival, LocalDate scheduleDate) {
         routeRepository.findByDepartureAndArrivalAndScheduleDate(departure, arrival, scheduleDate)
                 .ifPresent(route -> {
                     throw new VehicleException(DUPLICATE_ROUTE);
                 });
-        Route route = Route.create(departure, arrival, scheduleDate, times);
-        return routeRepository.save(route).getRouteId();
     }
 
     @Transactional
     public void dispatchBus(Long routeId, Long busId, String timeSlot, long seatPrice) {
         Bus bus = busRepository.getByIdOrThrow(busId);
         Route route = routeRepository.getByIdOrThrow(routeId);
+        validateAlreadyDispatch(bus, route, timeSlot);
+        RouteSchedule routeSchedule = RouteSchedule.create(bus, route.getMatchedRouteTimeSlot(timeSlot), seatPrice);
+        routeScheduleRepository.save(routeSchedule);
+    }
+
+    private void validateAlreadyDispatch(Bus bus, Route route, String timeSlot) {
         routeScheduleRepository.findByBusAndRouteTimeSlot(bus, route.getMatchedRouteTimeSlot(timeSlot)).ifPresent(
                 routeSchedule -> {
                     throw new VehicleException(DUPLICATE_DISPATCH_TIME);
                 }
         );
-        RouteSchedule routeSchedule = RouteSchedule.create(bus, route.getMatchedRouteTimeSlot(timeSlot), seatPrice);
-        routeScheduleRepository.save(routeSchedule);
     }
 
     @Cacheable(
