@@ -22,9 +22,12 @@ public class User extends BaseEntity {
     @Getter
     private Long userId;
 
+    @Getter
     private String email;
     private String password;
+    @Getter
     private String name;
+    @Getter
     private String phoneNumber;
 
     private User(String email, String password, String name, String phoneNumber) {

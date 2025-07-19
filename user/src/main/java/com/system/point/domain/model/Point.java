@@ -13,7 +13,9 @@ public class Point extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long pointId;
+    @Getter
     private Long userId;
 
     @Getter

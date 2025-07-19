@@ -18,5 +18,21 @@ export async function signIn(data) {
     });
 
     if (!res.ok) throw new Error('로그인 실패');
-    return res.json();
+    
+    const result = await res.json();
+    
+    // JWT 토큰을 localStorage에 저장
+    if (result.accessToken) {
+        localStorage.setItem('authToken', result.accessToken);
+    }
+    
+    return result;
+}
+
+export function signOut() {
+    localStorage.removeItem('authToken');
+}
+
+export function isAuthenticated() {
+    return localStorage.getItem('authToken') !== null;
 }

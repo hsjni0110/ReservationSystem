@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { signUp } from '../../api/auth'
 
 export default function SignUpForm() {
+    const navigate = useNavigate()
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -16,8 +17,13 @@ export default function SignUpForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await signUp(form)
-        alert('회원가입 성공!')
+        try {
+            await signUp(form)
+            alert('회원가입 성공! 로그인 페이지로 이동합니다.')
+            navigate('/sign-in')
+        } catch (error) {
+            alert('회원가입 실패! 다시 시도해 주세요.')
+        }
     }
 
     return (
