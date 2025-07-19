@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+    id 'java-test-fixtures'
+}
+
+dependencies {
+
+    testFixturesImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation(testFixtures(project(path: project.path)))
+
+}

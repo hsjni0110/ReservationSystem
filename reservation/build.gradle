@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'java-test-fixtures'
 }
 
 dependencies {
+
     implementation(project(":common"))
     implementation(project(":user"))
     implementation(project(":event-outbox"))
+
+    testFixturesImplementation('com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.27')
+
 }

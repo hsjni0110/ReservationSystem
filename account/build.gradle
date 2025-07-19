@@ -8,4 +8,7 @@ dependencies {
     implementation(project(":user"))
     implementation(project(":event-outbox"))
 
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(testFixtures(project(":user")))
+
 }
