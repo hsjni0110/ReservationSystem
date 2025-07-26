@@ -47,3 +47,4 @@ node_modules
 /infra/grafana/data/
 
 db-main.yml
+generated

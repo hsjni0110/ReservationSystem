@@ -1,0 +1,224 @@
+-- =============================================
+-- 🚌 버스 예약 시스템 동적 더미 데이터 생성 SQL
+-- 생성일시: {{ generation_time }}
+-- 데이터 기간: {{ start_date }} ~ {{ end_date }}
+-- 총 노선 수: {{ total_routes }}개
+-- 총 시간대 슬롯 수: {{ total_time_slots }}개
+-- =============================================
+
+-- 문자셋 설정
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+-- 외래키 체크 비활성화
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 기존 데이터 초기화 (외래키 순서 고려)
+DELETE FROM reservation.scheduled_seat;
+DELETE FROM reservation.route_schedule_scheduled_seats;
+DELETE FROM reservation.route_schedule;
+DELETE FROM reservation.route_route_time_slots;
+DELETE FROM reservation.route_time_slot;
+DELETE FROM reservation.route;
+DELETE FROM reservation.bus;
+
+-- 외래키 체크 재활성화
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- AUTO_INCREMENT 초기화
+ALTER TABLE reservation.bus AUTO_INCREMENT = 1;
+ALTER TABLE reservation.route AUTO_INCREMENT = 1;
+ALTER TABLE reservation.route_time_slot AUTO_INCREMENT = 1;
+ALTER TABLE reservation.route_schedule AUTO_INCREMENT = 1;
+ALTER TABLE reservation.scheduled_seat AUTO_INCREMENT = 1;
+
+-- =============================================
+-- 1. 🚍 버스 데이터 삽입 ({{ bus_count }}대)
+-- =============================================
+
+INSERT INTO reservation.bus (created_at, updated_at, bus_name, bus_number, capacity) VALUES
+{%- for bus in buses %}
+('{{ bus.created_at }}', '{{ bus.updated_at }}', '{{ bus.bus_name }}', '{{ bus.bus_number }}', {{ bus.capacity }})
+{%- if not loop.last %},{% endif %}
+{%- endfor %};
+
+-- =============================================
+-- 2. 🛣️ 노선 데이터 삽입 ({{ total_routes }}개)
+-- =============================================
+
+INSERT INTO reservation.route (departure, arrival, schedule_date) VALUES
+{%- for route in routes %}
+('{{ route.departure }}', '{{ route.arrival }}', '{{ route.schedule_date }}')
+{%- if not loop.last %},{% endif %}
+{%- endfor %};
+
+-- =============================================
+-- 3. ⏰ 시간대 슬롯 생성 ({{ total_time_slots }}개)
+-- =============================================
+
+-- 노선별 시간대 슬롯 생성
+INSERT INTO reservation.route_time_slot (time_slot, route_id) VALUES
+{%- for time_slot in time_slots %}
+('{{ time_slot.time }}', {{ time_slot.route_id }})
+{%- if not loop.last %},{% endif %}
+{%- endfor %};
+
+-- route_route_time_slots 관계 테이블 데이터 삽입
+INSERT INTO reservation.route_route_time_slots (route_route_id, route_time_slots_route_time_slot_id)
+SELECT r.route_id, rts.route_time_slot_id
+FROM reservation.route r
+JOIN reservation.route_time_slot rts ON r.route_id = rts.route_id;
+
+-- =============================================
+-- 4. 📅 노선 스케줄 생성 (버스 할당)
+-- =============================================
+
+-- UNIQUE 제약조건을 고려하여 버스 수만큼만 스케줄 생성
+-- 각 버스는 하나의 스케줄에만 할당 (1:1 매핑)
+INSERT INTO reservation.route_schedule (created_at, updated_at, available_seats, sale_status, bus, route_time_slot)
+SELECT 
+    NOW(),
+    NOW(),
+    b.capacity,
+    'ON_SALE',
+    b.bus_id,
+    rts.route_time_slot_id
+FROM (
+    SELECT 
+        bus_id, 
+        capacity, 
+        ROW_NUMBER() OVER (ORDER BY bus_id) as rn
+    FROM reservation.bus
+) b
+JOIN (
+    SELECT 
+        route_time_slot_id,
+        ROW_NUMBER() OVER (ORDER BY route_time_slot_id) as rn
+    FROM reservation.route_time_slot
+    WHERE route_time_slot_id <= {{ bus_count }}
+) rts ON b.rn = rts.rn;
+
+-- =============================================
+-- 5. 💺 좌석 데이터 생성
+-- =============================================
+
+INSERT INTO reservation.scheduled_seat (created_at, updated_at, is_reserved, seat_id, seat_price, route_schedule_route_schedule_id)
+SELECT 
+    rs.created_at,
+    rs.updated_at,
+    CASE 
+        WHEN RAND() > 0.{{ reservation_rate }} THEN 1  -- {{ 100 - reservation_rate }}% 확률로 예약됨
+        ELSE 0
+    END,
+    seat_num.seat_id,
+    CASE 
+        WHEN b.bus_name = '프리미엄버스' THEN 
+            CASE WHEN r.schedule_date >= '2025-07-01' THEN {{ prices.premium.high }}.00 ELSE {{ prices.premium.low }}.00 END
+        WHEN b.bus_name = '우등고속버스' THEN 
+            CASE WHEN r.schedule_date >= '2025-07-01' THEN {{ prices.deluxe.high }}.00 ELSE {{ prices.deluxe.low }}.00 END
+        ELSE 
+            CASE WHEN r.schedule_date >= '2025-07-01' THEN {{ prices.standard.high }}.00 ELSE {{ prices.standard.low }}.00 END
+    END,
+    rs.route_schedule_id
+FROM reservation.route_schedule rs
+JOIN reservation.bus b ON rs.bus = b.bus_id
+JOIN reservation.route_time_slot rts ON rs.route_time_slot = rts.route_time_slot_id
+JOIN reservation.route r ON rts.route_id = r.route_id
+CROSS JOIN (
+    {%- for i in range(1, max_capacity + 1) %}
+    SELECT {{ i }} as seat_id
+    {%- if not loop.last %} UNION ALL{% endif %}
+    {%- endfor %}
+) seat_num
+WHERE seat_num.seat_id <= b.capacity;
+
+-- route_schedule_scheduled_seats 관계 테이블 데이터 삽입
+INSERT INTO reservation.route_schedule_scheduled_seats (route_schedule_route_schedule_id, scheduled_seats_scheduled_seat_id)
+SELECT ss.route_schedule_route_schedule_id, ss.scheduled_seat_id
+FROM reservation.scheduled_seat ss
+WHERE ss.route_schedule_route_schedule_id IS NOT NULL;
+
+-- =============================================
+-- 6. 📊 실시간 예약 현황 업데이트
+-- =============================================
+
+-- 스케줄의 available_seats를 실제 예약 현황에 맞게 업데이트
+UPDATE reservation.route_schedule rs
+JOIN reservation.bus b ON rs.bus = b.bus_id
+SET rs.available_seats = b.capacity - COALESCE((
+    SELECT COUNT(*) 
+    FROM reservation.scheduled_seat ss 
+    WHERE ss.route_schedule_route_schedule_id = rs.route_schedule_id 
+    AND ss.is_reserved = 1
+), 0);
+
+-- =============================================
+-- 7. 📈 데이터 생성 결과 확인
+-- =============================================
+
+SELECT '=== 🚌 동적 더미 데이터 생성 완료! ===' as result;
+
+SELECT 'Bus Count' as entity, COUNT(*) as count FROM reservation.bus
+UNION ALL
+SELECT 'Total Route Count', COUNT(*) FROM reservation.route
+UNION ALL  
+SELECT 'July 2025 Route Count', COUNT(*) FROM reservation.route WHERE schedule_date >= '2025-07-01' AND schedule_date < '2025-08-01'
+UNION ALL
+SELECT 'Route Time Slot Count', COUNT(*) FROM reservation.route_time_slot
+UNION ALL
+SELECT 'Route Schedule Count', COUNT(*) FROM reservation.route_schedule
+UNION ALL
+SELECT 'Total Scheduled Seat Count', COUNT(*) FROM reservation.scheduled_seat
+UNION ALL
+SELECT 'Reserved Seat Count', COUNT(*) FROM reservation.scheduled_seat WHERE is_reserved = 1
+UNION ALL
+SELECT 'Available Seat Count', COUNT(*) FROM reservation.scheduled_seat WHERE is_reserved = 0;
+
+SELECT '=== 📅 2025년 7월 예약 가능 노선 (상위 20개) ===' as result;
+
+SELECT 
+    DATE_FORMAT(r.schedule_date, '%m월 %d일') as '날짜',
+    CASE DAYOFWEEK(r.schedule_date)
+        WHEN 1 THEN '일' WHEN 2 THEN '월' WHEN 3 THEN '화' WHEN 4 THEN '수'
+        WHEN 5 THEN '목' WHEN 6 THEN '금' WHEN 7 THEN '토'
+    END as '요일',
+    r.departure as '출발지',
+    r.arrival as '도착지',
+    GROUP_CONCAT(DISTINCT rts.time_slot ORDER BY rts.time_slot) as '운행시간',
+    COUNT(DISTINCT r.route_id) as '운행편수'
+FROM reservation.route r
+JOIN reservation.route_time_slot rts ON r.route_id = rts.route_id
+WHERE r.schedule_date >= '2025-07-01' AND r.schedule_date < '2025-08-01'
+GROUP BY r.schedule_date, r.departure, r.arrival
+ORDER BY r.schedule_date, r.departure, r.arrival
+LIMIT 20;
+
+SELECT '=== 💰 버스 등급별 요금 정보 ===' as result;
+
+SELECT 
+    b.bus_name as '버스등급',
+    COUNT(DISTINCT b.bus_id) as '보유대수',
+    AVG(b.capacity) as '평균좌석수',
+    MIN(CAST(ss.seat_price AS DECIMAL)) as '최저요금',
+    MAX(CAST(ss.seat_price AS DECIMAL)) as '최고요금',
+    ROUND(AVG(CAST(ss.seat_price AS DECIMAL)), 0) as '평균요금'
+FROM reservation.bus b
+LEFT JOIN reservation.route_schedule rs ON b.bus_id = rs.bus
+LEFT JOIN reservation.scheduled_seat ss ON rs.route_schedule_id = ss.route_schedule_route_schedule_id
+GROUP BY b.bus_name
+ORDER BY 평균요금 DESC;
+
+SELECT '=== 🎯 노선 통계 (권역별) ===' as result;
+
+{%- if region_stats %}
+SELECT region_from, region_to, route_count, avg_time_slots
+FROM (
+{%- for stat in region_stats %}
+    SELECT '{{ stat.region_from }}' as region_from, '{{ stat.region_to }}' as region_to, 
+           {{ stat.route_count }} as route_count, {{ stat.avg_time_slots }} as avg_time_slots
+    {%- if not loop.last %} UNION ALL{% endif %}
+{%- endfor %}
+) stats
+ORDER BY route_count DESC
+LIMIT 15;
+{%- endif %}
